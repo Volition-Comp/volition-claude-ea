@@ -54,12 +54,18 @@ what Adan approves.
   when Claude Code is running locally (on-demand each morning, or a local scheduled
   trigger). A cloud/headless routine cannot reach local Odoo until we move Odoo to a
   remote/OAuth connector (the Option B in the claude-integrations project).
-- **Email attachments:** the Gmail MCP lists attachments but does NOT expose their file
-  bytes, so they can't be pulled directly into Odoo. Workaround: Adan saves the
-  attachment to Google Drive, then use `Google_Drive.search_files` +
-  `download_file_content` (base64) and create an `ir.attachment` in Odoo
-  (`res_model`, `res_id`, `name`, `datas`, `mimetype`) on the target record. Or Adan
-  drag-drops it into Odoo himself.
+- **Email attachments — ALWAYS ASK to attach to the opportunity.** Whenever an email
+  has an attachment, ask Adan whether to attach it to the related opportunity/SO.
+  Reliable methods (in order):
+  1. **Link the Drive file** (preferred): if it's saved in Drive, find it with
+     `Google_Drive.search_files` and put a clickable link on the record
+     (`https://drive.google.com/file/d/<id>/view`) in the description or a note. No
+     corruption risk, single source of truth.
+  2. **Adan drag-drops** the file into Odoo for a true embedded attachment.
+  3. Native binary upload (create `ir.attachment` with base64 `datas`) is **unreliable
+     through this path** — reproducing large base64 by hand drops bytes and corrupts the
+     file. Avoid unless the content can be verified byte-exact (decoded length must match
+     the Drive `fileSize`).
 - Always leave new opportunities for Adan to review; never email anyone on his behalf
   without explicit approval.
 - Known repeat contacts include dealer reps (e.g., John Wieneke, Ken Garff Ford Greeley,
