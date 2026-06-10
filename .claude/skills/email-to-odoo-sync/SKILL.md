@@ -54,6 +54,12 @@ what Adan approves.
   when Claude Code is running locally (on-demand each morning, or a local scheduled
   trigger). A cloud/headless routine cannot reach local Odoo until we move Odoo to a
   remote/OAuth connector (the Option B in the claude-integrations project).
+- **Email attachments:** the Gmail MCP lists attachments but does NOT expose their file
+  bytes, so they can't be pulled directly into Odoo. Workaround: Adan saves the
+  attachment to Google Drive, then use `Google_Drive.search_files` +
+  `download_file_content` (base64) and create an `ir.attachment` in Odoo
+  (`res_model`, `res_id`, `name`, `datas`, `mimetype`) on the target record. Or Adan
+  drag-drops it into Odoo himself.
 - Always leave new opportunities for Adan to review; never email anyone on his behalf
   without explicit approval.
 - Known repeat contacts include dealer reps (e.g., John Wieneke, Ken Garff Ford Greeley,
