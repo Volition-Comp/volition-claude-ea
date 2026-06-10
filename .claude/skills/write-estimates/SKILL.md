@@ -48,6 +48,8 @@ Always show Adan a readable preview and get an explicit "go" before creating.
 7. On "go": `validate_write` then `execute_approved_write` (confirm=true).
 8. **Read the record back** (`name`, `so_name`, `partner_id`, `amount_total`, `state`)
    and report the new SO number. Leave it in **draft**; never confirm or send.
+9. **Create the CRM opportunity and link it** (see Opportunities section). Every SO we
+   write gets a matching opportunity, linked both ways.
 
 ## Install / labor products (this Odoo instance)
 Look up live when unsure; these are the common ones:
@@ -76,6 +78,22 @@ option string (pull options via `get_model_fields` if unsure):
 - `x_studio_wheel_base` — "Wheel Base" (e.g. `148" WB`, `144" WB`, `159" WB`, ...)
 - `x_studio_roof_height` — "Roof Height" (LR, MR, HR, SHR)
 - `x_studio_vin` / `x_vin` — VIN (char); `x_studio_customer_request_date` — "Customer Vehicle ETA"
+
+## Opportunities (CRM)
+Every SO needs a matching `crm.lead` opportunity, linked both ways.
+- **Create** `crm.lead`: `name` = project name (= `so_name`), `type` = "opportunity",
+  `partner_id` = same contact as the SO, `expected_revenue` = SO total, `user_id` =
+  salesperson (Adan = 6, Tony = 7), `team_id` = Sales (1), `stage_id` = **Proposition (3)**
+  for a freshly written quote, plus `contact_name` / `email_from`.
+- **Link the SO**: set `opportunity_id` = the new lead, and `origin` ("Source Document",
+  on the Other Info tab) = the project name. Both appear on the SO's Other Info tab.
+- Stages: New(1), Qualified(2), Proposition(3), Approved – Final Prep(10), Won(4),
+  Off-Site(11), In Production(8), Prod. Complete(9), Invoiced(7), Delivered & Unpaid(5),
+  Archive(6).
+
+## Material note (don't mislabel)
+Section headers and notes must reflect the **actual material**. Don't default to
+"aluminum." Known: **Knapheide = steel modular shelving**; **Westcan = aluminum**.
 
 ## Format references
 Good examples of Adan's shelving/upfit structure: **S00918, S01132, S01066**.
