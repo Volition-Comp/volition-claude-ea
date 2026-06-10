@@ -29,6 +29,7 @@ Reusable workflows live in `.claude/skills/`. Each skill is a folder with a `SKI
 
 ### Built skills
 - **write-estimates:** draft Odoo sales quotes in Adan's format. See `.claude/skills/write-estimates/`.
+- **audit-activities:** review and clean up planned activities on Odoo opportunities. See `.claude/skills/audit-activities/`.
 
 ### Skills to Build (backlog)
 From the tasks that eat the most time:

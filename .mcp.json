@@ -11,7 +11,8 @@
         "ODOO_API_KEY": "${ODOO_API_KEY}",
         "ODOO_TRANSPORT": "json2",
         "ODOO_JSON2_DATABASE_HEADER": "1",
-        "ODOO_MCP_ENABLE_WRITES": "1"
+        "ODOO_MCP_ENABLE_WRITES": "1",
+        "ODOO_MCP_ALLOWED_SIDE_EFFECT_METHODS": "mail.activity.action_feedback"
       }
     }
   }
