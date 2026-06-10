@@ -67,6 +67,16 @@ Look up live when unsure; these are the common ones:
 - `client_order_ref` — Customer Reference (optional)
 - `order_line` — one2many, build with `[0, 0, {...}]` command tuples
 
+## Vehicle fields (sale.order, all selection dropdowns)
+Set these when Adan gives the vehicle. They are selection fields, so use the exact
+option string (pull options via `get_model_fields` if unsure):
+- `x_studio_year` — "Year" (e.g. "2026", options 2015-2027)
+- `x_studio_make` — "Make" (Ford, Mercedes-Benz, Ram, Chevrolet, GMC, Other)
+- `x_studio_van_type` — **"Model"** (Connect, Transit, Metris, Sprinter, Savana, Express, Promaster, Promaster City, Other)
+- `x_studio_wheel_base` — "Wheel Base" (e.g. `148" WB`, `144" WB`, `159" WB`, ...)
+- `x_studio_roof_height` — "Roof Height" (LR, MR, HR, SHR)
+- `x_studio_vin` / `x_vin` — VIN (char); `x_studio_customer_request_date` — "Customer Vehicle ETA"
+
 ## Format references
 Good examples of Adan's shelving/upfit structure: **S00918, S01132, S01066**.
 A larger specialized build for section/note style: **S01285**.
