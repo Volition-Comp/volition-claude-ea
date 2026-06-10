@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "odoo": {
+      "command": "C:\\Users\\agonz\\.local\\bin\\odoo-mcp.exe",
+      "args": ["--transport", "stdio"],
+      "env": {
+        "ODOO_URL": "https://www.volitioncomponents.com",
+        "ODOO_DB": "shahid-malik-volition-production-12281539",
+        "ODOO_USERNAME": "agonzales@volitioncomponents.com",
+        "ODOO_PASSWORD": "${ODOO_API_KEY}",
+        "ODOO_API_KEY": "${ODOO_API_KEY}",
+        "ODOO_TRANSPORT": "json2",
+        "ODOO_JSON2_DATABASE_HEADER": "1",
+        "ODOO_MCP_ENABLE_WRITES": "1"
+      }
+    }
+  }
+}
