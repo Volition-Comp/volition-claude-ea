@@ -27,9 +27,11 @@ Communication style, tone, and formatting rules live in `.claude/rules/communica
 ## Skills
 Reusable workflows live in `.claude/skills/`. Each skill is a folder with a `SKILL.md` file: `.claude/skills/skill-name/SKILL.md`. Build skills organically as recurring workflows emerge. Don't pre-build them.
 
+### Built skills
+- **write-estimates:** draft Odoo sales quotes in Adan's format. See `.claude/skills/write-estimates/`.
+
 ### Skills to Build (backlog)
 From the tasks that eat the most time:
-- **Write estimates:** draft Odoo estimates
 - **Estimate research:** research vehicles, parts, and pricing for quotes
 - **Email triage and responses:** handle inbox, draft replies
 - **Fleet prospecting emails:** repeatable outreach for multi-vehicle fleet sales

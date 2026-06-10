@@ -22,7 +22,7 @@ Connect Odoo and other tools to Claude via OAuth so the assistant can act direct
 - [x] Verify Odoo auth works (uid 6) from both Windows and the connector's Python
 - [x] Restart VS Code so the extension loads the connector
 - [x] Run a read test (recent quotations) — live in-chat via `search_records`, confirmed 2026-06-10
-- [ ] Guarded write test (needs `ODOO_MCP_ENABLE_WRITES=1` + confirm=true; do when ready)
+- [x] Guarded write test passed (2026-06-10): set + reverted Customer Reference on draft S01286. Flow is preview_write -> validate_write -> execute_approved_write (confirm=true). Writes enabled via `ODOO_MCP_ENABLE_WRITES=1`.
 
 ### Gotcha resolved
 The connector only loads env config when `ODOO_PASSWORD` is set (it gates on that
