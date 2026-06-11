@@ -19,10 +19,15 @@ what Adan approves.
   (`preview_write` -> `validate_write` -> `execute_approved_write`).
 
 ## Process
-1. **Pull recent mail.** `search_threads` with `in:inbox newer_than:1d` (or since the
-   last sweep). Exclude internal senders (`@volitioncomponents.com`), newsletters, and
-   automated/no-reply mail. Use `get_thread` (FULL_CONTENT) when the snippet is thin or
-   there's an attachment.
+1. **Pull recent mail.** `search_threads` with `in:inbox is:unread newer_than:1d` (or
+   since the last sweep). Exclude internal senders (`@volitioncomponents.com`),
+   newsletters, and automated/no-reply mail. Use `get_thread` (FULL_CONTENT) when the
+   snippet is thin or there's an attachment.
+   - **Avoid resurfacing handled threads.** `search_threads` returns the whole thread, so
+     an old message can look open. Before flagging a thread, confirm its **most recent
+     message is an inbound one Adan has NOT already answered** (the latest message is not
+     `SENT` / not from Adan, and is genuinely within the window). If Adan already replied,
+     skip it. When unsure, ask before drafting a reply or logging a note.
 2. **Classify each relevant thread:**
    - **New opportunity** — a sales request/spec/quote ask from someone with no open
      opportunity. (E.g., a dealer rep sending an upfit spec sheet.)
