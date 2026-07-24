@@ -1,0 +1,47 @@
+Volition Components - QuickBooks to Odoo Migration Reconciliation,,,,,
+Source: QuickBooks Balance Sheet 12/31/2023 (cash basis) vs Odoo ledger balance as of 12/31/2023,,,,,
+,,,,,
+Section,Account,QuickBooks 12/31/2023,Odoo as-of 12/31/2023,Status,Note / Action
+TIE-OUT (Assets),Income Account,1772.21,1772.21,MATCH,
+TIE-OUT (Assets),Owners Comp 10%,8909.94,8909.94,MATCH,
+TIE-OUT (Assets),Profit Account 5%,18990.41,18990.41,MATCH,
+TIE-OUT (Assets),Rainy Day 9%,36758.36,36758.36,MATCH,
+TIE-OUT (Assets),Taxes 11%,21779.09,21779.09,MATCH,
+TIE-OUT (Assets),OpEx 60% (bank 7965),17210.08,37741.74,MISMATCH +20531.66,"Migration error in entry MISC/2023/12/0004 - OpEx overstated by exactly 20531.66; correct balance (17210.08) matches QB. Reclass 20531.66 out of OpEx"
+TIE-OUT (Assets),Undeposited Funds,3168.96,3168.96,MATCH,
+TIE-OUT (Assets),Outstanding Receipts 7965,n/a (not a QB acct),-52792.50,MIGRATION ARTIFACT,See breakdown below - entirely migration plugs + 1 stranded payment
+TIE-OUT (Assets),Inventory Asset,39897.70,39897.70,MATCH,
+TIE-OUT (Assets),Inventory Adjustment,-1569.21,(none),NOT MIGRATED,QB had -1569.21; no Odoo counterpart. Confirm with CPA
+TIE-OUT (Assets),Accounts Receivable,0.00,31225.82,EXPECTED,Cash-vs-accrual: QB cash basis zeroes AR; Odoo ledger is accrual. Not a migration error
+TIE-OUT (Assets),Furniture Fixtures & Equipment,9833.18,9833.18,MATCH,
+TIE-OUT (Assets),Odoo Software,17357.00,17357.00,MATCH,
+TIE-OUT (Assets),Accumulated Depreciation,-4280.00,-4280.00,MATCH,
+TIE-OUT (Assets),Shop Van PKA37046,69800.46,69800.46,MATCH,
+TIE-OUT (Liabilities),Volition Purchases (credit card),12971.51,12971.51,MATCH,
+TIE-OUT (Liabilities),Ally Auto Loan,60357.32,60357.32,MATCH,
+TIE-OUT (Liabilities),Chase Line of Credit,46823.36,46823.36,MATCH,
+TIE-OUT (Liabilities),Accounts Payable,n/a (cash basis),46846.83,EXPECTED,Cash-vs-accrual. Not a migration error
+TIE-OUT (Liabilities),Payroll Liabilities (parent),429.06,429.06,MATCH,
+TIE-OUT (Liabilities),CO Income Tax / CO Withholding,3920.00,3920.00,MATCH,Migrated correctly - never reconciled/cleared afterward (see payroll worksheet)
+TIE-OUT (Liabilities),CO Unemployment Tax,884.17,884.17,MATCH,Migrated correctly - never cleared
+TIE-OUT (Liabilities),Federal Taxes 941/944,1895.46,1895.46,MATCH,Migrated correctly - never cleared
+TIE-OUT (Liabilities),Federal Unemployment 940,39.89,39.89,MATCH,
+TIE-OUT (Liabilities),Medical Insurance,1343.31,1343.31,MATCH,
+TIE-OUT (Liabilities),Customer Prepaid Deposits,0.00,-16136.31,MIGRATION ARTIFACT,From entry MISC/2023/12/0002. This is the entire odd deposits balance
+TIE-OUT (Liabilities),Sales Tax (CO DOR+Broomfield+Golden),10043.55,differs (structure),INVESTIGATE,Odoo consolidated sales tax differently; see sales-tax section of cleanup sheet
+TIE-OUT (Equity),Adan Gonzales Equity,39203.29,39203.29,MATCH,
+TIE-OUT (Equity),Tony Garcia Equity,39203.29,39203.29,MATCH,Note: QB TRIAL balance showed 30794.76 for Tony; QB BALANCE SHEET and Odoo agree at 39203.29
+TIE-OUT (Equity),Adan Distributions,17856.68,17856.69,MATCH (1 cent),
+TIE-OUT (Equity),Tony (Garcia) Distributions,17856.69,17856.69,MATCH,
+TIE-OUT (Equity),Retained Earnings,-55989.55,-10713.92,MISMATCH,Basis-sensitive (cash vs accrual) but gap is large - verify with CPA
+,,,,,
+CULPRIT ENTRY 1,MISC/2023/12/0004 'Constance Deleted Transaction 2023' (12/31/2023),,,,"Distributed the 105420.09 total bank balance into the 6 Profit-First sub-accounts. Put 37741.74 into OpEx instead of 17210.08 (over by 20531.66) and plugged the difference to Outstanding Receipts (-20531.66). FIX: reclass 20531.66 - reduces OpEx to its correct 17210.08 AND removes 20531.66 of the Outstanding Receipts balance in one move"
+CULPRIT ENTRY 2,MISC/2023/12/0002 'Reversal of 2023 Transactions/Bills/Invoices/Payments' (12/31/2023),,,,"Cash-basis conversion / migration cleanup entry. Scattered residuals across: Customer Prepaid Deposits +16136.31, Outstanding Receipts -49177.50, Inventory Interim Received -8847.18 / Delivered +2654.38, Tax Cash Basis Transition +710.70; also reversed AR -68247.78 and AP +46846.83 plus P&L. This one entry is the source of the stale deposits balance, most of the Outstanding Receipts balance, and part of the GRNI/tax-transition residuals"
+OUTSTANDING RECEIPTS BREAKDOWN,-52792.50 total,,,,"= -20531.66 (Culprit Entry 1 plug) + -49177.50 (Culprit Entry 2) + 16916.66 (Loveland Ford customer payment from 11/30/2023, received but never reconciled out of the clearing account). None of it is current bank activity"
+,,,,,
+RECOMMENDED FIXES,,,,,
+Fix 1,OpEx bank overstatement,,,20531.66,"Reclass 20531.66 out of OpEx (to correct it to 17210.08) - also clears that portion of Outstanding Receipts. Clean, provable"
+Fix 2,Outstanding Receipts remainder,,,,"Trace/clear the remaining migration plugs and the Loveland Ford payment; likely close the clearing account to equity/opening balance with CPA sign-off"
+Fix 3,Customer Prepaid Deposits,,,16136.31,"Reverse/reclass the migration plug (already on cleanup sheet)"
+Fix 4,Retained Earnings gap,,,,"Reconcile with CPA - migration + cash/accrual difference"
+Note,All fixes touch 2023 (prior year),,,,"Route through Balanced Ledgers / CPA before booking anything"

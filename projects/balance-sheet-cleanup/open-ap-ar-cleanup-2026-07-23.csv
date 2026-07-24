@@ -1,0 +1,89 @@
+Account,Direction,Partner,Reference,Vendor/Cust Ref,Date,Amount,Category,Action for bookkeeper
+Accounts Payable,Credit (we owe),Westcan Manufacturing,BILL/2026/05/0106,"100026907-910",2026-05-31,-16494.95,Normal open payable,Pay per terms
+Accounts Payable,Credit (we owe),Vehicle Lighting Solutions,BILL/2026/07/0042,,2026-07-20,-10008.32,Partial paid (10k of 20008.32),Apply remaining balance / confirm
+Accounts Payable,Credit (we owe),AMF Bruns,BILL/2026/07/0015,0040792-IN,2026-07-09,-8438.06,Normal open payable,Pay per terms
+Accounts Payable,Credit (we owe),Westcan Manufacturing,BILL/2026/06/0037,100026929,2026-06-22,-4852.32,Normal open payable,Pay per terms
+Accounts Payable,Credit (we owe),Westcan Manufacturing,BILL/2026/05/0098,100026881,2026-05-31,-6325.15,Normal open payable,Pay per terms
+Accounts Payable,Credit (we owe),Westcan Manufacturing,BILL/2026/05/0097,100026880,2026-05-31,-4594.98,Normal open payable,Pay per terms
+Accounts Payable,Credit (we owe),Colorado Kreative Designs,BILL/2026/06/0091,2119,2026-06-30,-3505.00,Normal open payable,Pay per terms
+Accounts Payable,Credit (we owe),DTI Trucks,BILL/2026/07/0053,03W2694,2026-07-22,-2712.50,Normal open payable,Pay per terms
+Accounts Payable,Credit (we owe),DTI Trucks,BILL/2026/07/0049,03W2713,2026-07-21,-2712.50,Normal open payable,Pay per terms
+Accounts Payable,Credit (we owe),DTI Trucks,BILL/2026/07/0050,,2026-07-21,-2712.50,Normal open payable - no vendor ref,Confirm invoice # then pay
+Accounts Payable,Credit (we owe),Autoplex,BILL/2026/07/0037,541987/542034,2026-07-17,-1800.00,Normal open payable,Pay per terms
+Accounts Payable,Credit (we owe),Phil Long Ford Denver,BILL/2025/05/0033,INV 2024/00077 & 00294,2025-05-14,-1000.00,Aged over 1yr,Investigate - stale, likely needs clearing
+Accounts Payable,Credit (we owe),Maxxima,BILL/2026/07/0056,N185465,2026-07-22,-559.52,Normal open payable,Pay per terms
+Accounts Payable,Credit (we owe),Xcel Energy,BILL/2026/06/0084,June Usage,2026-06-30,-489.25,Normal open payable,Pay per terms
+Accounts Payable,Credit (we owe),AM Auto North America,BILL/2026/07/0024,AM20685,2026-07-15,-334.46,Normal open payable,Pay per terms
+Accounts Payable,Credit (we owe),Lowe's,BNK4/2026/00075,,2026-04-07,-244.86,Credit card open balance,Match to receipt/bill
+Accounts Payable,Credit (we owe),Geekify,BILL/2026/05/0039,,2026-05-15,-160.00,Normal open payable,Pay per terms
+Accounts Payable,Credit (we owe),AMF Bruns,BILL/2026/07/0043,0041078-IN,2026-07-20,-117.92,Normal open payable,Pay per terms
+Accounts Payable,Credit (we owe),Geekify,BILL/2025/10/0085,,2025-10-31,-120.00,Aged open payable,Pay or clear
+Accounts Payable,Credit (we owe),Geekify,BILL/2025/11/0058,,2025-11-26,-40.00,Aged open payable,Pay or clear
+Accounts Payable,Credit (we owe),Geekify,BILL/2026/05/0024,,2026-05-11,-40.00,Normal open payable,Pay per terms
+Accounts Payable,Credit (we owe),Adan Gonzales,BILL/2026/06/0046,FEDEX 585158,2026-06-23,-21.67,Reimbursement,Pay or clear
+Accounts Payable,Debit (cash-basis distortion),The Home Depot,RBILL/2025/06/0002,,2025-06-24,153.52,Vendor return sitting open,Match to original bill or reclass
+Accounts Payable,Debit (cash-basis distortion),Amazon,BNK2/2026/00139,MKTPL 1H4G150,2026-02-02,57.56,Unmatched bank charge in AP,Reclass to expense / match to bill
+Accounts Payable,Debit (cash-basis distortion),Amazon,BNK2/2026/00177,DI2JO6C93,2026-02-10,36.74,Unmatched bank charge in AP,Reclass to expense / match to bill
+Accounts Payable,Debit (cash-basis distortion),Amazon,BNK2/2026/00508,BY6V35H,2026-04-23,25.68,Unmatched bank charge in AP,Reclass to expense / match to bill
+Accounts Payable,Debit (cash-basis distortion),Amazon,BNK2/2024/00279,,2024-03-20,21.77,Unmatched bank charge in AP,Reclass to expense / match to bill
+Accounts Payable,Debit (cash-basis distortion),Amazon,BNK2/2026/00242,B96MK83,2026-03-01,14.98,Unmatched bank charge in AP,Reclass to expense / match to bill
+Accounts Payable,Debit (cash-basis distortion),Amazon,BNK2/2025/01016,BT3494E,2025-11-07,12.74,Unmatched bank charge in AP,Reclass to expense / match to bill
+Accounts Payable,Debit (cash-basis distortion),Amazon,BNK2/2025/01198,RE5QR7Y,2025-12-20,11.08,Unmatched bank charge in AP,Reclass to expense / match to bill
+Accounts Payable,Debit (cash-basis distortion),Amazon,PBNK2/2026/00210,,2026-03-17,7.35,Unapplied vendor payment,Match to bill
+Accounts Payable,Debit (cash-basis distortion),Amazon,MISC/2024/12/0005,,2024-12-31,4.21,Misc entry in AP,Reclass / clear
+Accounts Receivable,Debit (owed to us),Automotive Rentals (Holman),INV/2026/00164,S01226,2026-07-22,23743.11,Normal open receivable,Collect
+Accounts Receivable,Debit (owed to us),Automotive Rentals (Holman),INV/2026/00163,PO 2547019,2026-07-20,23402.35,Normal open receivable,Collect
+Accounts Receivable,Debit (owed to us),Enterprise Fleet Management,INV/2026/00161,1Y9647532,2026-07-17,15663.15,Normal open receivable,Collect
+Accounts Receivable,Debit (owed to us),Enterprise Fleet Management,INV/2026/00156,1Y9647530,2026-07-15,15663.15,Normal open receivable,Collect
+Accounts Receivable,Debit (owed to us),Enterprise Fleet Management,INV/2026/00148,1Y9647534,2026-07-01,5850.31,Normal open receivable,Collect
+Accounts Receivable,Debit (owed to us),Phil Long Ford Denver,INV/2026/00166,S01289,2026-07-23,4404.32,Normal open receivable,Collect
+Accounts Receivable,Debit (owed to us),Sill-TerHar Motors,INV/2026/00158,J458,2026-07-15,2764.24,Normal open receivable,Collect
+Accounts Receivable,Debit (owed to us),City and County of Broomfield,INV/2026/00162,S01412,2026-07-20,414.93,Normal open receivable,Collect
+Accounts Receivable,Debit (owed to us),Sun-Up Delivery,INV/2026/00122,S01269,2026-06-01,147.08,Normal open receivable,Collect
+Accounts Receivable,Credit (refund cycle),VKGG Inc.,PBNK12/2026/00070,R-INV/2026/00129,2026-06-22,765.54,Refund reversal - pairs with payment below,Reconcile the pair - nets to zero
+Accounts Receivable,Debit (refund cycle),VKGG Inc.,PBNK12/2026/00067,INV/2026/00129,2026-06-09,-765.54,Stripe payment - pairs with reversal above,Reconcile the pair - nets to zero
+Accounts Receivable,Credit (cash-basis distortion),Amazon,BNK2/2026/00255,MKTPLACE PMTS,2026-03-04,-40.98,Amazon credit miscoded to AR,Reclass to AP/expense
+Inventory Interim (Received) / GRNI,Credit (received not invoiced),UNASSIGNED - no partner,,,,-18382.08,Large unattributed balance,INVESTIGATE - likely opening balance / inventory adjustments / manual JE with no vendor
+Inventory Interim (Received) / GRNI,Credit (received not invoiced),Tommy Gate,,,,-7307.50,Aged GRNI - awaiting bill,Match receipt to vendor bill or reverse
+Inventory Interim (Received) / GRNI,Debit (billed not received),AMF Bruns,,,,4623.66,Bill posted without matching receipt,Post/match the receipt or correct bill
+Inventory Interim (Received) / GRNI,Debit (billed not received),Reefervan,,,,3695.00,Bill posted without matching receipt,Post/match the receipt or correct bill
+Inventory Interim (Received) / GRNI,Debit (billed not received),Espar of Michigan,,,,3262.45,Bill posted without matching receipt,Post/match the receipt or correct bill
+Inventory Interim (Received) / GRNI,Credit (received not invoiced),Knapheide,,,,-4151.00,Aged GRNI - awaiting bill,Match receipt to vendor bill
+Inventory Interim (Received) / GRNI,Credit (received not invoiced),TouRig (Ballast Holdings),,,,-2618.98,Aged GRNI - awaiting bill,Match receipt to vendor bill
+Inventory Interim (Received) / GRNI,Credit (received not invoiced),Federal Signal Safety and Security,,,,-2515.00,Aged GRNI - awaiting bill,Match receipt to vendor bill
+Inventory Interim (Received) / GRNI,Debit (billed not received),AM Auto North America,,,,2157.92,Bill posted without matching receipt,Post/match the receipt or correct bill
+Inventory Interim (Received) / GRNI,Credit (received not invoiced),Amazon,,,,-1942.65,Receipts not matched to bills,Match or reclass
+Inventory Interim (Received) / GRNI,Credit (received not invoiced),Visa Credit Card,,,,-1392.89,Card purchases in GRNI,Match or reclass to expense
+Inventory Interim (Received) / GRNI,Credit (received not invoiced),Techni US,,,,-1313.41,Aged GRNI - awaiting bill,Match receipt to vendor bill
+Inventory Interim (Received) / GRNI,Debit (billed not received),MS Distribution,,,,1294.11,Bill posted without matching receipt,Post/match the receipt or correct bill
+Inventory Interim (Received) / GRNI,Credit (received not invoiced),Legend Fleet Solutions,,,,-1252.01,Aged GRNI - awaiting bill,Match receipt to vendor bill
+Inventory Interim (Received) / GRNI,Debit (billed not received),Westcan Manufacturing,,,,952.25,Bill posted without matching receipt,Post/match the receipt or correct bill
+Inventory Interim (Received) / GRNI,Credit (received not invoiced),Plasticare,,,,-795.00,Aged GRNI - awaiting bill,Match receipt to vendor bill
+Inventory Interim (Received) / GRNI,Credit (received not invoiced),The Home Depot,,,,-667.03,Receipts not matched to bills,Match or reclass
+Inventory Interim (Received) / GRNI,Debit (billed not received),Volition Components,,,,593.74,Internal - bill without receipt,Investigate internal entry
+Inventory Interim (Received) / GRNI,Debit (billed not received),Fenton Mobility Products,,,,575.00,Bill posted without matching receipt,Post/match the receipt or correct bill
+Inventory Interim (Received) / GRNI,Credit (received not invoiced),Altro,,,,-564.89,Aged GRNI - awaiting bill,Match receipt to vendor bill
+Inventory Interim (Received) / GRNI,Debit (billed not received),RB Components,,,,517.00,Bill posted without matching receipt,Post/match the receipt or correct bill
+Inventory Interim (Received) / GRNI,Debit (billed not received),Fiamma,,,,457.00,Bill posted without matching receipt,Post/match the receipt or correct bill
+Inventory Interim (Received) / GRNI,Debit (billed not received),Safe Fleet (Prime Design),,,,442.71,Bill posted without matching receipt,Post/match the receipt or correct bill
+Inventory Interim (Received) / GRNI,Debit (billed not received),Twin Air Products,,,,378.29,Bill posted without matching receipt,Post/match the receipt or correct bill
+Inventory Interim (Received) / GRNI,Debit (billed not received),Uber Freight,,,,329.66,Freight in GRNI,Match or reclass
+Inventory Interim (Received) / GRNI,Credit (received not invoiced),Upfitters,,,,-345.97,Receipts not matched to bills,Match or reclass
+Inventory Interim (Received) / GRNI,Credit (received not invoiced),Van Wife Components,,,,-331.75,Receipts not matched to bills,Match or reclass
+Inventory Interim (Received) / GRNI,Debit (billed not received),AHT Cooling Systems,,,,294.98,Bill posted without matching receipt,Post/match the receipt or correct bill
+Inventory Interim (Received) / GRNI,Debit (billed not received),Keystone Automotive,,,,239.05,Bill posted without matching receipt,Post/match the receipt or correct bill
+Inventory Interim (Received) / GRNI,Debit (billed not received),Meyer Distributing,,,,222.11,Bill posted without matching receipt,Post/match the receipt or correct bill
+Inventory Interim (Received) / GRNI,Credit (received not invoiced),Keyston Bros,,,,-205.44,Receipts not matched to bills,Match or reclass
+Inventory Interim (Received) / GRNI,Debit (billed not received),Santa Fe Distributing,,,,187.95,Bill posted without matching receipt,Post/match the receipt or correct bill
+Inventory Interim (Received) / GRNI,Credit (received not invoiced),AV-Tech Electronics,,,,-124.89,Receipts not matched to bills,Match or reclass
+Inventory Interim (Received) / GRNI,Credit (received not invoiced),Webasto,,,,-100.00,Receipts not matched to bills,Match or reclass
+Customer Prepaid Deposits,Debit (abnormal - shows negative on B/S),UNASSIGNED - no customer,MISC/2023/12/0002,"Reversal of 2023 Transactions/Bills/Invoices/Payments",2023-12-31,16136.31,Stale 2023 year-end reversal never cleared - entire account balance,INVESTIGATE - review the 2023 year-end entry; reclass or reverse to clear
+Sales Tax (200215 CO Dept of Revenue),Debit (stranded remittance),Colorado Department of Revenue,,,,1510.91,Remittance debit with no offsetting collection in this account,Reclass into the primary collected account (200213/200216)
+Sales Tax (200217 Cash Basis Transition),Debit (uncleared residual),UNASSIGNED,,"traces to a ~710.70 manual JE",,711.34,Small residual never cleared out of the transition account,Clear to the primary tax payable account
+Sales Tax - RECOMMENDATION,Consolidation,All tax accounts,"200213 / 200214 / 200215 / 200216 / 200217",,,-75.68,"Five accounts hold the same sales tax liability and offset each other; combined net is about -76 (roughly flat)",One-time consolidation: pick ONE collected account, move the others in, use or retire the jurisdiction accounts consistently, clear the two stranded residuals above
+Off-Balance (400104 Gain/Loss on Disposal of Van),Mis-typed account,No partner,MISC/2024/04/0005,"Sale of Van and Loan Payoff",2024-04-24,12255.90,Account is typed 'Off Balance Sheet' so this real loss never hit the P&L; 2024 profit overstated by this amount,"Re-type account 400104 to an Expense type so loss flows to P&L. Touches prior year - confirm period with accountant; if 2024 closed, book a current-dated reclass instead"
+Payroll (200221 Wage Garnishment + 200222 CO FAMLI),Bank-feed miscoding,Family Support Registry,"8 x BNK2/2024",various,2024,3320.00,"Child-support garnishment payments miscoded to CO FAMLI (state family-leave) in 2024; fixed going-forward in 2025",Reclass the 8 x $415 FSR payments from 200222 to 200221 (see payroll correction worksheet). Clears BOTH accounts to under $300. Prior year - loop in Balanced Ledgers
+Payroll (200223 + 200224 Health Benefits),Bank-feed miscoding,Humana / Kaiser,ongoing,,2024-2026,6198.25,"Every premium payment split 50/50 employee/employer regardless of real share; many unmatched 'Open balance' items",Reconcile each premium to payroll-spreadsheet withholding; employee share clears liability, remainder is employer expense. Bookkeeper (Muhammad) w/ Balanced Ledgers data
+Payroll (200209 Payroll Clearing),Unreconciled,Payroll,ongoing,,2026,9997.70,"Clearing account should net to zero; -$9,997.70 residual all in 2026 - accruals vs bank payments don't tie",Reconcile 2026 payroll accruals to actual net-pay bank payments. Bookkeeper
+Payroll (200210 Federal Taxes 941/944),Unreconciled,IRS,ongoing,,2026,6698.59,"Debit balance - appears over-remitted or under-accrued, mostly 2026",Reconcile to 941 filings. Bookkeeper w/ Balanced Ledgers
+Payroll - RECOMMENDATION,Process,All payroll accounts,,,,,"Payroll booked two ways over time (Salaries journal + manual Misc JEs from spreadsheets); bank-feed side manually coded and error-prone",Going forward book payroll through ONE consistent method driven off the Balanced Ledgers reports; reconcile each liability monthly to zero

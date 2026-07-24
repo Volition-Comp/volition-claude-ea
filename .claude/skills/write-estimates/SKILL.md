@@ -53,6 +53,9 @@ explicit "go" before creating.
      product/Misc line name, prefix `(QTY n)` when >1), **then the labor
      description(s)** (copied from the labor line names), **then freight** if any
      (e.g. "Freight to Volition Components").
+     - **Never show labor hours in the note.** Hours live in the labor line's qty
+       column, not the Includes text. Write "Install the trailer wiring harness per
+       the manufacturer's instructions", never "..., 2 hours".
      - **If a line is a package / kit (a product with a BOM), expand it.** Don't list a
        bare package SKU in the note. Read its `mrp.bom` / `mrp.bom.line` (BOMs link by
        `product_tmpl_id`, not `product_id`) and list the **actual component parts**, each
@@ -73,6 +76,9 @@ explicit "go" before creating.
    - **Install labor lines** (`[LABORMTO]` id 2515), one per task, with the
      **install/positioning description in the `name`**, qty = hours.
    - **Freight last** (`[S&H] Shipping`), after the labor lines, only if a cost is given.
+     **Never give freight its own `line_section` header.** The shipping line lives inside a
+     pricing section (per-section when each package ships separately, or as the final line of
+     the last section for a single lumped freight). No standalone "FREIGHT" section, ever.
    Pattern per section: **section → Includes note → parts → labor → freight.**
    Good references: S01130, S01250 (Tofwerk).
 5. **Set the project name**: top-level `so_name` = the project name.
@@ -127,7 +133,11 @@ option string (pull options via `get_model_fields` if unsure):
 - `x_studio_van_type` — **"Model"** (Connect, Transit, Metris, Sprinter, Savana, Express, Promaster, Promaster City, Other)
 - `x_studio_wheel_base` — "Wheel Base" (e.g. `148" WB`, `144" WB`, `159" WB`, ...)
 - `x_studio_roof_height` — "Roof Height" (LR, MR, HR, SHR)
-- `x_studio_vin` / `x_vin` — VIN (char); `x_studio_customer_request_date` — "Customer Vehicle ETA"
+- **VIN** — set **`x_vin`** (this is the field shown on the SO form; `x_studio_vin` is a
+  separate hidden field, so writing only `x_studio_vin` leaves the visible VIN blank). Set
+  both to be safe. **If a VIN is given, always decode it and populate every vehicle field you
+  can** (year/make/model/wheelbase/roof) from the decode, not just the VIN string.
+- `x_studio_customer_request_date` — "Customer Vehicle ETA"
 
 ## Opportunities (CRM)
 Every SO needs a matching `crm.lead` opportunity, linked both ways.

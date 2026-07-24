@@ -2,3 +2,7 @@
 CLAUDE.local.md
 .claude/settings.local.json
 node_modules/
+
+# Scratch HTML pulled from the website build (root only; subfolder HTML can still be tracked)
+/*.html
+/jar.txt

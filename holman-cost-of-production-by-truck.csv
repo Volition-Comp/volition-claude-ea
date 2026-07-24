@@ -1,0 +1,22 @@
+Customer,Truck,Unit Ref,SO #,CRM Stage,Build,Four Major Vendors,Other Materials + Freight,In-House Labor,Total Cost of Production
+High Five,Plumbing #1,007852,S01176,In Production,Plumbing,11724.56,1728.96,1827.00,15280.52
+High Five,Plumbing #2,007943,S01207,In Production,Plumbing,11724.56,1728.96,1827.00,15280.52
+High Five,Plumbing #3,007921,S01206,In Production,Plumbing,11724.56,1728.96,1827.00,15280.52
+High Five,Plumbing #4,007781,S01205,In Production,Plumbing,11724.56,1799.53,1827.00,15351.09
+High Five,Plumbing #5,015185,S01226,In Production,Plumbing,11724.56,1708.13,1670.40,15103.09
+High Five,HVAC #5,015117,S01227,In Production,HVAC,10034.79,1951.77,1200.60,13187.16
+High Five,HVAC #4,006088,S01213,Delivered & Unpaid,HVAC,10034.79,938.85,1200.60,12174.24
+High Five,HVAC #3,006723,S01212,Delivered & Unpaid,HVAC,10034.79,1968.27,1200.60,13203.66
+High Five,HVAC #2,006699,S01211,Delivered & Unpaid,HVAC,10034.79,1743.21,1200.60,12978.60
+High Five,HVAC #1,006623,S01210,Delivered & Unpaid,HVAC,10034.79,1727.26,1200.60,12962.65
+AAA,HVAC #4,006635,S01202,Invoiced,HVAC,10034.79,1729.67,1200.60,12965.06
+AAA,HVAC #6,290657,S01204,Invoiced,HVAC,10034.79,1580.37,1200.60,12815.76
+AAA,HVAC #5,290854,S01203,Delivered & Unpaid,HVAC,10034.79,1683.44,1200.60,12918.83
+,,,,,,,,,
+,GRAND TOTAL (13),,,,,138901.12,22017.38,18583.20,179501.70
+,,,,,,,,,
+,Notes:,,,,,,,,
+,"Four Major Vendors = Tommy Gate + Westcan (parts + 22% tariff) + DTI sublet + Autoplex. Validated against actual POs.",,,,,,,,
+,"Other Materials + Freight = Odoo booked cost minus labor minus four-vendor. Per-truck HVAC figures vary due to inconsistent entry of freight/tariff/misc placeholder lines; trucks are physically near-identical.",,,,,,,,
+,"In-House Labor (LABORMTO) is internal payroll, NOT a vendor payable. Exclude it when sizing the LOC paydown.",,,,,,,,
+,"Total Cost of Production = Odoo booked cost (sale price minus margin). Westcan tariff may be understated by ~$44/HVAC truck vs the real 22%.",,,,,,,,

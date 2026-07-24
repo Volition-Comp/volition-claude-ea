@@ -1,0 +1,35 @@
+Section,Date,Bank Move Ref,Odoo Line ID,Payee,Amount,Currently Coded To,Should Be Coded To,Notes
+BATCH 1 - Family Support Registry reclass (all 2024 - prior year - loop in Balanced Ledgers),,,,,,,,
+FSR miscode,2024-04-24,BNK2/2024/00449,34826,Family Support Registry,415.00,200222 CO FAMLI,200221 Wage Garnishment,Child-support garnishment miscoded to state family-leave account
+FSR miscode,2024-06-24,BNK2/2024/00635,34816,Family Support Registry,415.00,200222 CO FAMLI,200221 Wage Garnishment,
+FSR miscode,2024-07-25,BNK2/2024/00750,34814,Family Support Registry,415.00,200222 CO FAMLI,200221 Wage Garnishment,
+FSR miscode,2024-08-23,BNK2/2024/00846,34488,Family Support Registry,415.00,200222 CO FAMLI,200221 Wage Garnishment,
+FSR miscode,2024-09-24,BNK2/2024/00926,34675,Family Support Registry,415.00,200222 CO FAMLI,200221 Wage Garnishment,
+FSR miscode,2024-10-25,BNK2/2024/01030,38037,Family Support Registry,415.00,200222 CO FAMLI,200221 Wage Garnishment,
+FSR miscode,2024-11-21,BNK2/2024/01123,41689,Family Support Registry,415.00,200222 CO FAMLI,200221 Wage Garnishment,
+FSR miscode,2024-12-23,BNK2/2024/01200,44193,Family Support Registry,415.00,200222 CO FAMLI,200221 Wage Garnishment,
+BATCH 1 TOTAL,,,,,3320.00,,,8 payments x $415
+,,,,,,,,
+EXPECTED RESULT AFTER BATCH 1,,,,,,,,
+Account impact,,,,200222 CO FAMLI,,from -3049.39 (overpaid),to approx +270.61 (small owe),Essentially cleared
+Account impact,,,,200221 Wage Garnishment,,from 3619.95 owed,to approx 299.95 owed,Essentially cleared
+,,,,,,,,
+BATCH 2 - Health premium 50/50 split (needs Balanced Ledgers spreadsheet to set correct amounts),,,,,,,,
+Guidance,ongoing,Humana / Kaiser payments,,Humana & Kaiser Permanente,varies,Split 50/50 to 200223 & 200224,Split per actual employee vs employer share,"Every premium payment is halved between Employee Health (200223) and Employer Health (200224) regardless of the real split. Reconcile each payment to the employee-withholding amount on the payroll spreadsheet; the employee share clears the liability, the remainder is EMPLOYER EXPENSE (not a liability). Many Kaiser lines are unmatched 'Open balance' bank items."
+,,,,,,,,
+BATCH 3 - Other payroll liabilities not reconciled (need spreadsheet reconciliation),,,,,,,,
+Reconcile,ongoing,200209 Payroll Clearing,,,-9997.70,200209 Payroll Clearing,Net to ~0,"Clearing account should always net to zero. -$9,997.70 residual, all in 2026. Accruals vs bank payments don't tie."
+Reconcile,ongoing,200210 Federal Taxes (941/944),,,6698.59,200210 Federal Taxes,Reconcile to 941 filings,"Debit balance = remitted more than accrued, or under-accrued. Mostly a 2026 gap."
+Reconcile,ongoing,200218 CO Withholding,,,-6132.19,200218 CO Withholding,Reconcile to CO filings,Owe balance; reconcile accruals vs remittances
+Reconcile,ongoing,200223 Employee Health Benefits,,,-5038.39,200223 Employee Health,Reconcile to withholding,See Batch 2
+Reconcile,ongoing,200224 Employer Health Benefits,,,-1159.86,200224 Employer Health,Move employer share to expense,See Batch 2
+Reconcile,ongoing,200219 CO Unemployment Tax,,,-885.30,200219 CO Unemployment,Reconcile to CO filings,
+Reconcile,ongoing,200220 AFLAC,,,-243.70,200220 AFLAC,Reconcile to AFLAC statements,
+Reconcile,ongoing,200226 IRA Contributions,,,-1181.77,200226 IRA Contributions,Reconcile to provider,
+Reconcile,ongoing,200211 Federal Unemployment (940),,,-969.42,200211 Federal Unemployment,Reconcile to 940,
+,,,,,,,,
+BATCH 4 - 2023 QuickBooks migration carryover (CONFIRMED against 12/31/2023 QB Balance Sheet - prior year - Balanced Ledgers),,,,,,,,
+Carryover,2023-12-31,QB migration,,CO Income Tax / CO Withholding (200218),3920.00,Opening balance from QuickBooks,Reconcile/clear vs CO filings,QB 12/31/23 'CO Income Tax' 3920.00 carried into Odoo opening balance and never cleared
+Carryover,2023-12-31,QB migration,,CO Unemployment Tax (200219),884.17,Opening balance from QuickBooks,Reconcile/clear vs CO filings,QB 12/31/23 'CO Unemployment Tax' 884.17 carried in and never cleared
+Carryover,2023-12-31,QB migration,,Federal Taxes 941/944 (200210),1895.46,Opening balance from QuickBooks,Reconcile/clear vs 941 filings,QB 12/31/23 'Federal Taxes (941/944)' 1895.46 carried in and never cleared
+BATCH 4 TOTAL,,,,,6699.63,,,Confirms the 'trial balance carryover' - these 2023 QB closing balances are still embedded in the current Odoo payroll balances

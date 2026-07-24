@@ -1,0 +1,547 @@
+<title>Volition Phoenix — Year 1 Pro Forma</title>
+<style>
+  :root {
+    --bg: #F4F6F8;
+    --panel: #FFFFFF;
+    --panel-2: #EDF1F5;
+    --ink: #16202B;
+    --ink-soft: #48586A;
+    --ink-faint: #7A8A9C;
+    --line: #DCE3EB;
+    --line-strong: #C3CEDA;
+    --accent: #2F6E8F;
+    --accent-soft: #E2EDF3;
+    --pos: #2E7D5B;
+    --pos-soft: #E0F0E8;
+    --neg: #BE4F35;
+    --neg-soft: #F6E4DE;
+    --warn: #B5852A;
+    --shadow: 0 1px 2px rgba(20,32,43,.06), 0 8px 24px rgba(20,32,43,.06);
+    --mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0E141A;
+      --panel: #161F28;
+      --panel-2: #1D2833;
+      --ink: #E7EDF3;
+      --ink-soft: #A7B6C4;
+      --ink-faint: #6E8091;
+      --line: #263340;
+      --line-strong: #33434F;
+      --accent: #5AA8CB;
+      --accent-soft: #17303C;
+      --pos: #57B98C;
+      --pos-soft: #133026;
+      --neg: #E0735A;
+      --neg-soft: #341C17;
+      --warn: #D3A648;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #F4F6F8; --panel: #FFFFFF; --panel-2: #EDF1F5; --ink: #16202B; --ink-soft: #48586A;
+    --ink-faint: #7A8A9C; --line: #DCE3EB; --line-strong: #C3CEDA; --accent: #2F6E8F; --accent-soft: #E2EDF3;
+    --pos: #2E7D5B; --pos-soft: #E0F0E8; --neg: #BE4F35; --neg-soft: #F6E4DE; --warn: #B5852A;
+    --shadow: 0 1px 2px rgba(20,32,43,.06), 0 8px 24px rgba(20,32,43,.06);
+  }
+  :root[data-theme="dark"] {
+    --bg: #0E141A; --panel: #161F28; --panel-2: #1D2833; --ink: #E7EDF3; --ink-soft: #A7B6C4;
+    --ink-faint: #6E8091; --line: #263340; --line-strong: #33434F; --accent: #5AA8CB; --accent-soft: #17303C;
+    --pos: #57B98C; --pos-soft: #133026; --neg: #E0735A; --neg-soft: #341C17; --warn: #D3A648;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--sans); line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: clamp(20px, 4vw, 44px) clamp(16px, 3vw, 32px) 72px; }
+
+  header.masthead { border-bottom: 2px solid var(--ink); padding-bottom: 18px; margin-bottom: 26px; }
+  .eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+  h1 { font-size: clamp(26px, 4.5vw, 40px); line-height: 1.08; margin: 8px 0 6px; letter-spacing: -.02em; text-wrap: balance; }
+  .sub { color: var(--ink-soft); max-width: 68ch; font-size: 15px; }
+  .verified { display: inline-flex; align-items: center; gap: 7px; margin-top: 12px; font-size: 12.5px; color: var(--ink-soft);
+    background: var(--panel); border: 1px solid var(--line); padding: 5px 11px; border-radius: 999px; }
+  .verified b { color: var(--ink); font-weight: 600; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--pos); }
+
+  h2.section { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint);
+    font-weight: 700; margin: 40px 0 14px; display: flex; align-items: center; gap: 10px; }
+  h2.section::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+
+  /* KPI row */
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .kpi { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px 16px 15px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
+  .kpi .lab { font-size: 11.5px; letter-spacing: .04em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; }
+  .kpi .val { font-family: var(--mono); font-size: clamp(22px, 3.2vw, 29px); font-weight: 600; margin-top: 7px; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .kpi .note { font-size: 12px; color: var(--ink-soft); margin-top: 3px; }
+  .kpi .rail { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent); }
+  .kpi.pos .rail { background: var(--pos); } .kpi.pos .val { color: var(--pos); }
+  .kpi.neg .rail { background: var(--neg); } .kpi.neg .val { color: var(--neg); }
+
+  /* Controls */
+  .controls { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; box-shadow: var(--shadow); }
+  .ctl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 22px 28px; }
+  .ctl label { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; font-weight: 600; margin-bottom: 9px; }
+  .ctl .cur { font-family: var(--mono); font-size: 14px; color: var(--accent); font-weight: 700; font-variant-numeric: tabular-nums; }
+  .ctl .hint { font-size: 11.5px; color: var(--ink-faint); margin-top: 7px; font-weight: 400; }
+  input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 5px; border-radius: 4px; background: var(--panel-2); outline: none; }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--accent); border: 3px solid var(--panel); box-shadow: 0 1px 4px rgba(0,0,0,.25); cursor: pointer; }
+  input[type=range]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--accent); border: 3px solid var(--panel); cursor: pointer; }
+  input[type=range]:focus-visible { box-shadow: 0 0 0 3px var(--accent-soft); }
+  .presets { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); align-items: center; }
+  .presets .plab { font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-faint); font-weight: 700; margin-right: 4px; }
+  button.preset { font-family: var(--sans); font-size: 13px; font-weight: 600; color: var(--ink); background: var(--panel-2); border: 1px solid var(--line-strong); padding: 7px 14px; border-radius: 999px; cursor: pointer; transition: all .12s; }
+  button.preset:hover { border-color: var(--accent); color: var(--accent); }
+  button.preset.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  :root[data-theme="dark"] button.preset.active { color: #0E141A; }
+
+  /* Chart */
+  .chart-card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px 14px; box-shadow: var(--shadow); }
+  .chart-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+  .chart-head h3 { margin: 0; font-size: 15px; }
+  .chart-head .leg { font-size: 12px; color: var(--ink-soft); display: flex; gap: 16px; }
+  .chart-head .leg span { display: inline-flex; align-items: center; gap: 6px; }
+  .swatch { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+  canvas { width: 100%; height: auto; display: block; }
+
+  /* Table */
+  .tbl-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); background: var(--panel); }
+  table { border-collapse: collapse; width: 100%; min-width: 780px; font-variant-numeric: tabular-nums; }
+  th, td { padding: 9px 12px; text-align: right; font-size: 13px; white-space: nowrap; }
+  thead th { position: sticky; top: 0; background: var(--panel-2); color: var(--ink-soft); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; font-weight: 700; border-bottom: 1px solid var(--line-strong); }
+  th.rowlab, td.rowlab { text-align: left; position: sticky; left: 0; background: var(--panel); font-weight: 600; z-index: 1; box-shadow: 1px 0 0 var(--line); }
+  thead th.rowlab { background: var(--panel-2); z-index: 3; }
+  td { font-family: var(--mono); color: var(--ink); border-bottom: 1px solid var(--line); }
+  tr.total td { font-weight: 700; border-top: 2px solid var(--line-strong); background: var(--panel-2); }
+  tr.total td.rowlab { background: var(--panel-2); }
+  tr.gp td { color: var(--accent); }
+  td.yr { border-left: 2px solid var(--line-strong); font-weight: 700; }
+  th.yr { border-left: 2px solid var(--line-strong); }
+  .cell-pos { color: var(--pos) !important; } .cell-neg { color: var(--neg) !important; }
+  td.be { background: var(--pos-soft); box-shadow: inset 0 0 0 1px var(--pos); }
+
+  /* two-col */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .capital { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; box-shadow: var(--shadow); }
+  .capital h3 { margin: 0 0 4px; font-size: 15px; }
+  .capital .cap-sub { font-size: 12.5px; color: var(--ink-soft); margin-bottom: 14px; }
+  .caprow { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 0; border-bottom: 1px dashed var(--line); font-size: 13.5px; }
+  .caprow .k { color: var(--ink-soft); } .caprow .v { font-family: var(--mono); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .caprow.tot { border-bottom: none; border-top: 2px solid var(--line-strong); margin-top: 4px; padding-top: 11px; font-size: 15px; }
+  .caprow.tot .k { color: var(--ink); font-weight: 700; }
+  .compare { margin-top: 14px; background: var(--panel-2); border-radius: 10px; padding: 12px 14px; font-size: 13px; color: var(--ink-soft); }
+  .compare b { color: var(--neg); font-family: var(--mono); }
+
+  /* scenario matrix */
+  .matrix { width: 100%; border-collapse: collapse; min-width: 0; }
+  .matrix th, .matrix td { text-align: center; padding: 10px 8px; font-size: 13px; }
+  .matrix thead th { background: transparent; border-bottom: 1px solid var(--line-strong); }
+  .matrix td.mlab, .matrix th.mlab { text-align: left; font-family: var(--sans); font-weight: 600; color: var(--ink-soft); box-shadow: none; position: static; }
+  .matrix td { font-family: var(--mono); font-weight: 600; border-bottom: 1px solid var(--line); border-radius: 0; }
+  .chip { display: inline-block; padding: 3px 9px; border-radius: 7px; font-variant-numeric: tabular-nums; }
+  .chip.p { background: var(--pos-soft); color: var(--pos); } .chip.n { background: var(--neg-soft); color: var(--neg); }
+
+  .notes { font-size: 12.5px; color: var(--ink-soft); }
+  .notes li { margin-bottom: 7px; }
+  .notes b { color: var(--ink); }
+  .src { margin-top: 8px; font-size: 11.5px; color: var(--ink-faint); }
+  .foot { margin-top: 44px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 12px; color: var(--ink-faint); }
+
+  @media (max-width: 720px) {
+    .kpis { grid-template-columns: repeat(2, 1fr); }
+    .two { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="eyebrow">Volition Components · Expansion Analysis</div>
+    <h1>Phoenix Location — Year 1 Pro Forma</h1>
+    <p class="sub">A working model of the second-location economics, rebuilt on Volition's actual 2024–2025 numbers rather than the proposal's placeholders. Drag any assumption to see how the ramp, margin, and overhead move the break-even point.</p>
+    <div class="verified"><span class="dot"></span><b>Verified against Odoo (FY2024–25) &amp; QuickBooks (2021–23)</b></div>
+  </header>
+
+  <div class="kpis" id="kpis"></div>
+
+  <h2 class="section">Assumptions you can flex</h2>
+  <div class="controls">
+    <div class="ctl-grid">
+      <div class="ctl">
+        <label for="ramp">Ramp vs. proposal target <span class="cur" id="ramp-cur"></span></label>
+        <input type="range" id="ramp" min="45" max="110" step="5" value="100">
+        <div class="hint">100% = Brian's 175-vehicle Year 1. Broomfield's real cold-start Year 1 was ~20% of that.</div>
+      </div>
+      <div class="ctl">
+        <label for="gm">Gross margin <span class="cur" id="gm-cur"></span></label>
+        <input type="range" id="gm" min="40" max="62" step="1" value="52">
+        <div class="hint">Broomfield 2025 books ≈ 60% (improving); conservative per-part basis ≈ 41%. 52% = new-shop planning midpoint.</div>
+      </div>
+      <div class="ctl">
+        <label for="price">Revenue per vehicle <span class="cur" id="price-cur"></span></label>
+        <input type="range" id="price" min="5500" max="10000" step="100" value="7024">
+        <div class="hint">Brian used $7,024/vehicle. Real Broomfield upfit jobs average ~$12–14k/order (multi-vehicle).</div>
+      </div>
+      <div class="ctl">
+        <label for="rent">Monthly rent <span class="cur" id="rent-cur"></span></label>
+        <input type="range" id="rent" min="6000" max="12000" step="250" value="9000">
+        <div class="hint">Broomfield now ~$6.7k/mo. Brian assumed $10k/mo for a fresh Phoenix lease.</div>
+      </div>
+      <div class="ctl">
+        <label for="ti">Tenant improvements (startup) <span class="cur" id="ti-cur"></span></label>
+        <input type="range" id="ti" min="15000" max="300000" step="5000" value="30000">
+        <div class="hint">Brian's model swings $150k–$600k here. Broomfield opened with ~$0 capitalized TI.</div>
+      </div>
+      <div class="ctl">
+        <label for="gmsal">Operating partner (Brian) salary/mo <span class="cur" id="gmsal-cur"></span></label>
+        <input type="range" id="gmsal" min="0" max="9000" step="500" value="6500">
+        <div class="hint">His draw as managing GM. Set to $0 to see location profit before his comp.</div>
+      </div>
+    </div>
+    <div class="presets">
+      <span class="plab">Scenarios</span>
+      <button class="preset" data-p="target">Target (Brian's ramp)</button>
+      <button class="preset" data-p="base">Base case</button>
+      <button class="preset" data-p="cons">Conservative</button>
+      <button class="preset" data-p="broom">Broomfield cold-start</button>
+    </div>
+  </div>
+
+  <h2 class="section">The cash J-curve</h2>
+  <div class="chart-card">
+    <div class="chart-head">
+      <h3>Cumulative operating cash flow, Months 1–12</h3>
+      <div class="leg">
+        <span><span class="swatch" style="background:var(--pos)"></span>Above break-even</span>
+        <span><span class="swatch" style="background:var(--neg)"></span>Below break-even</span>
+      </div>
+    </div>
+    <canvas id="chart" width="1040" height="340" aria-label="Cumulative operating cash flow chart"></canvas>
+  </div>
+
+  <h2 class="section">Month-by-month P&amp;L</h2>
+  <div class="tbl-scroll">
+    <table id="pl"></table>
+  </div>
+
+  <h2 class="section">Two things to pressure-test</h2>
+  <div class="two">
+    <div class="capital">
+      <h3>Startup capital, right-sized</h3>
+      <div class="cap-sub">Built to a lean, move-in-ready open like Broomfield's, with real runway instead of a heavy build-out.</div>
+      <div id="cap"></div>
+    </div>
+    <div class="capital">
+      <h3>Sensitivity — Year 1 operating income</h3>
+      <div class="cap-sub">Same overhead model; only ramp and margin change. Green = profit before taxes/distributions.</div>
+      <div class="tbl-scroll" style="border:none; box-shadow:none;">
+        <table class="matrix" id="matrix"></table>
+      </div>
+      <div class="compare" style="margin-top:16px;">The location's fate is set almost entirely by the <b style="color:var(--ink)">ramp</b> and <b style="color:var(--ink)">margin</b> — the two numbers Brian's proposal left open. Overhead barely moves it.</div>
+    </div>
+  </div>
+
+  <h2 class="section">What's baked in, and where it comes from</h2>
+  <ul class="notes">
+    <li><b>Gross margin.</b> Odoo accounting shows Broomfield gross margin rising 56.9% (2024) → 59.8% (2025). A conservative per-part calculation lands ~41%. The gap means some material cost isn't posting to COGS — worth reconciling — so the model defaults to a cautious <b>52%</b>.</li>
+    <li><b>Revenue.</b> Confirmed orders grew $1.45M (2024) → $1.80M (2025). Of 222 orders in 2025, 69 were sub-$1,000 warranty / online / service tickets (1.2% of revenue) that drag the raw average down; real upfit jobs averaged ~$14,200/order.</li>
+    <li><b>Staffing (loaded 1.18× for taxes/benefits).</b> Techs $25/hr, apprentice $23/hr, ops-manager equivalent ~$74k — all current Odoo rates. Ramp: 1 tech from open, 2nd at Month 4, 3rd at Month 8; coordinator from Month 3; operating partner as GM throughout.</li>
+    <li><b>Insurance $16.8k/yr &amp; utilities ~$15k/yr.</b> Insurance reflects your new agent's 2026-YTD run-rate (~$16.6k annualized, down from $30k). Utilities sit between Broomfield's ~$8k and a Phoenix cooling premium.</li>
+    <li><b>Merchant/processing at 2.5% of revenue</b>, marketing front-loaded ($5k launch, tapering to $1.2k/mo), plus rent, software, professional fees, and shop/office overhead.</li>
+  </ul>
+  <div class="src">Sources: Odoo production (sale.order, account.move.line, hr.employee, FY2024–25) and QuickBooks exports (2021–23). This is a planning model, not a guarantee — every input is an assumption until Phoenix has a signed lease, a real supplier-priced margin, and a quantified dealer pipeline.</div>
+
+  <div class="foot">Prepared for Adan Gonzales &amp; Tony Garcia · Confidential working draft · Figures update live as you move the sliders above.</div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var fmt0 = function (n) { return (n < 0 ? "-$" : "$") + Math.abs(Math.round(n)).toLocaleString("en-US"); };
+  var fmtK = function (n) { var s = n < 0 ? "-" : ""; return s + "$" + Math.abs(Math.round(n / 1000)).toLocaleString("en-US") + "k"; };
+  var MONTHS = ["M1","M2","M3","M4","M5","M6","M7","M8","M9","M10","M11","M12"];
+  var BRIAN_VEH = [3,6,9,12,14,16,17,18,19,20,20,21]; // 175 total
+  var TECHCT = [1,1,1,2,2,2,2,3,3,3,3,3];
+  var COORD  = [0,0,1,1,1,1,1,1,1,1,1,1];
+  var MKT    = [5000,3000,1200,1200,1200,1200,1200,1200,1200,1200,1200,1200];
+  var BRIAN_STARTUP = 801034;
+
+  var TECH_MO = 25 * 2080 / 12 * 1.18;      // loaded monthly tech cost
+  var COORD_MO = 54000 / 12 * 1.18;         // loaded monthly coordinator
+
+  var PRESETS = {
+    target: { ramp:100, gm:52, price:7024, rent:9000, ti:30000, gmsal:6500 },
+    base:   { ramp:85,  gm:50, price:7024, rent:9000, ti:30000, gmsal:6500 },
+    cons:   { ramp:65,  gm:47, price:7024, rent:9000, ti:30000, gmsal:6500 },
+    broom:  { ramp:45,  gm:52, price:7024, rent:6700, ti:15000, gmsal:6500 }
+  };
+
+  var state = { ramp:100, gm:52, price:7024, rent:9000, ti:30000, gmsal:6500 };
+
+  function compute(s) {
+    var rows = [];
+    var cum = 0, cumArr = [], beMonthly = null, beCum = null, peak = 0, yr = { rev:0, gp:0, opex:0, oi:0 };
+    var fixedNoRent = 1400 + 1250 + 500 + 1000 + 1500; // insurance, utilities, software, professional, office/misc
+    for (var m = 0; m < 12; m++) {
+      var veh = BRIAN_VEH[m] * (s.ramp / 100);
+      var rev = veh * s.price;
+      var gp = rev * (s.gm / 100);
+      var staff = TECHCT[m] * TECH_MO + COORD[m] * COORD_MO + s.gmsal;
+      var merchant = rev * 0.025;
+      var opex = s.rent + fixedNoRent + staff + MKT[m] + merchant;
+      var oi = gp - opex;
+      cum += oi;
+      if (beMonthly === null && oi > 0) beMonthly = m + 1;
+      if (beCum === null && cum > 0) beCum = m + 1;
+      if (cum < peak) peak = cum;
+      cumArr.push(cum);
+      rows.push({ veh:veh, rev:rev, gp:gp, opex:opex, oi:oi, cum:cum });
+      yr.rev += rev; yr.gp += gp; yr.opex += opex; yr.oi += oi;
+    }
+    return { rows:rows, cum:cumArr, beMonthly:beMonthly, beCum:beCum, peak:peak, yr:yr };
+  }
+
+  function yearOI(ramp, gm) {
+    var s = { ramp:ramp, gm:gm, price:state.price, rent:state.rent, ti:state.ti, gmsal:state.gmsal };
+    return compute(s).yr.oi;
+  }
+
+  function capital(s, peak) {
+    var lease = 2 * s.rent;
+    var equip = 60000, inv = 40000, sign = 20000;
+    var subtotal = lease + s.ti + equip + inv + sign;
+    var contingency = subtotal * 0.15;
+    var working = Math.max(80000, Math.ceil((-peak + 40000) / 5000) * 5000);
+    var total = subtotal + contingency + working;
+    return { lease:lease, ti:s.ti, equip:equip, inv:inv, sign:sign, contingency:contingency, working:working, total:total };
+  }
+
+  function renderKPIs(r) {
+    var oi = r.yr.oi;
+    var cap = capital(state, r.peak);
+    var items = [
+      { lab:"Year 1 operating income", val:fmt0(oi), note: state.gmsal>0 ? "after "+fmt0(state.gmsal*12)+" partner salary" : "before any partner comp", cls: oi>=0?"pos":"neg" },
+      { lab:"Break-even month", val: r.beCum ? "Month "+r.beCum : "Not in Yr 1", note: r.beMonthly ? "cash-positive month: M"+r.beMonthly : "monthly loss all year", cls: r.beCum?"pos":"neg" },
+      { lab:"Deepest cash dip", val:fmt0(r.peak), note:"peak operating drawdown", cls: r.peak<-1?"neg":"pos" },
+      { lab:"Capital / partner (50%)", val:fmt0(cap.total/2), note:"of "+fmt0(cap.total)+" total startup", cls:"" }
+    ];
+    $("kpis").innerHTML = items.map(function (k) {
+      return '<div class="kpi '+k.cls+'"><div class="rail"></div><div class="lab">'+k.lab+'</div><div class="val">'+k.val+'</div><div class="note">'+k.note+'</div></div>';
+    }).join("");
+  }
+
+  function renderTable(r) {
+    var head = '<thead><tr><th class="rowlab">Month</th>';
+    for (var m = 0; m < 12; m++) head += '<th>'+MONTHS[m]+'</th>';
+    head += '<th class="yr">Year 1</th></tr></thead>';
+
+    function row(label, key, opts) {
+      opts = opts || {};
+      var cls = opts.rowcls || "";
+      var h = '<tr class="'+cls+'"><td class="rowlab">'+label+'</td>';
+      for (var m = 0; m < 12; m++) {
+        var v = r.rows[m][key];
+        var cc = "";
+        if (opts.signed) cc = v >= 0 ? "cell-pos" : "cell-neg";
+        var be = (key === "cum" && r.beCum === m + 1) ? " be" : "";
+        var disp = opts.veh ? (Math.round(v * 10) / 10) : fmt0(v);
+        h += '<td class="'+cc+be+'">'+disp+'</td>';
+      }
+      var yv = opts.veh ? Math.round(r.rows.reduce(function(a,x){return a+x.veh;},0)) : fmt0(r.yr[opts.yrkey]);
+      var ycc = opts.signed ? (r.yr[opts.yrkey] >= 0 ? "cell-pos" : "cell-neg") : "";
+      h += '<td class="yr '+ycc+'">'+yv+'</td></tr>';
+      return h;
+    }
+    var body = '<tbody>';
+    body += row("Vehicles", "veh", { veh:true });
+    body += row("Revenue", "rev", { yrkey:"rev" });
+    body += row("Gross profit", "gp", { yrkey:"gp", rowcls:"gp" });
+    body += row("Operating costs", "opex", { yrkey:"opex" });
+    body += row("Operating income", "oi", { yrkey:"oi", signed:true, rowcls:"total" });
+    body += row("Cumulative", "cum", { yrkey:"oi", signed:true });
+    body += '</tbody>';
+    $("pl").innerHTML = head + body;
+  }
+
+  function renderCapital(r) {
+    var c = capital(state, r.peak);
+    var rows = [
+      ["Lease deposit (2 mo.)", c.lease],
+      ["Tenant improvements", c.ti],
+      ["Equipment &amp; tools", c.equip],
+      ["Opening inventory", c.inv],
+      ["Signage / office / IT", c.sign],
+      ["Contingency (15%)", c.contingency],
+      ["Working-capital runway", c.working]
+    ];
+    var h = rows.map(function (x) {
+      return '<div class="caprow"><span class="k">'+x[0]+'</span><span class="v">'+fmt0(x[1])+'</span></div>';
+    }).join("");
+    h += '<div class="caprow tot"><span class="k">Total startup capital</span><span class="v">'+fmt0(c.total)+'</span></div>';
+    var delta = BRIAN_STARTUP - c.total;
+    h += '<div class="compare">Brian\'s worst-case model: <b>'+fmt0(BRIAN_STARTUP)+'</b> — about '+fmt0(delta)+' heavier, almost all of it tenant improvements with no Broomfield precedent.</div>';
+    $("cap").innerHTML = h;
+  }
+
+  function renderMatrix() {
+    var ramps = [ [100,"Target"], [85,"Base"], [65,"Conservative"] ];
+    var gms = [45, 52, 60];
+    var h = '<thead><tr><th class="mlab">Ramp \\ Margin</th>';
+    gms.forEach(function (g) { h += '<th>'+g+'%</th>'; });
+    h += '</tr></thead><tbody>';
+    ramps.forEach(function (rp) {
+      h += '<tr><td class="mlab">'+rp[1]+' ('+rp[0]+'%)</td>';
+      gms.forEach(function (g) {
+        var oi = yearOI(rp[0], g);
+        var cls = oi >= 0 ? "p" : "n";
+        h += '<td><span class="chip '+cls+'">'+fmtK(oi)+'</span></td>';
+      });
+      h += '</tr>';
+    });
+    h += '</tbody>';
+    $("matrix").innerHTML = h;
+  }
+
+  function drawChart(r) {
+    var cv = $("chart"), ctx = cv.getContext("2d");
+    var cssW = cv.clientWidth || 1040;
+    var ratio = window.devicePixelRatio || 1;
+    var W = cssW, H = 340;
+    cv.width = W * ratio; cv.height = H * ratio; cv.style.height = H + "px";
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    var css = getComputedStyle(document.documentElement);
+    var C = function (n) { return css.getPropertyValue(n).trim(); };
+    var padL = 62, padR = 16, padT = 18, padB = 28;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+
+    var vals = r.cum.slice();
+    var maxV = Math.max.apply(null, vals.concat([0]));
+    var minV = Math.min.apply(null, vals.concat([0]));
+    var span = (maxV - minV) || 1;
+    maxV += span * 0.12; minV -= span * 0.12; span = maxV - minV;
+    var x = function (i) { return padL + (plotW) * (i / 11); };
+    var y = function (v) { return padT + plotH * (1 - (v - minV) / span); };
+
+    // gridlines
+    ctx.strokeStyle = C("--line"); ctx.fillStyle = C("--ink-faint");
+    ctx.lineWidth = 1; ctx.font = "11px " + C("--mono").replace(/"/g,"") ;
+    ctx.font = '11px ui-monospace, Consolas, monospace';
+    ctx.textAlign = "right"; ctx.textBaseline = "middle";
+    var ticks = 4;
+    for (var t = 0; t <= ticks; t++) {
+      var vv = minV + (span * t / ticks);
+      var yy = y(vv);
+      ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.moveTo(padL, yy); ctx.lineTo(W - padR, yy); ctx.stroke(); ctx.globalAlpha = 1;
+      ctx.fillText(fmtK(vv), padL - 8, yy);
+    }
+    // zero line
+    var y0 = y(0);
+    ctx.strokeStyle = C("--ink-soft"); ctx.lineWidth = 1.4; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(padL, y0); ctx.lineTo(W - padR, y0); ctx.stroke(); ctx.setLineDash([]);
+
+    // area fill split at zero using clip regions
+    function fillArea(clipAbove, color) {
+      ctx.save();
+      ctx.beginPath();
+      if (clipAbove) ctx.rect(padL, padT, plotW, y0 - padT);
+      else ctx.rect(padL, y0, plotW, (padT + plotH) - y0);
+      ctx.clip();
+      ctx.beginPath();
+      ctx.moveTo(x(0), y0);
+      for (var i = 0; i < 12; i++) ctx.lineTo(x(i), y(vals[i]));
+      ctx.lineTo(x(11), y0);
+      ctx.closePath();
+      ctx.globalAlpha = 0.16; ctx.fillStyle = color; ctx.fill(); ctx.globalAlpha = 1;
+      ctx.restore();
+    }
+    fillArea(true, C("--pos"));
+    fillArea(false, C("--neg"));
+
+    // line, colored per segment
+    ctx.lineWidth = 2.4; ctx.lineJoin = "round";
+    for (var i = 0; i < 11; i++) {
+      ctx.beginPath();
+      ctx.moveTo(x(i), y(vals[i]));
+      ctx.lineTo(x(i + 1), y(vals[i + 1]));
+      ctx.strokeStyle = (vals[i + 1] >= 0 ? C("--pos") : C("--neg"));
+      ctx.stroke();
+    }
+    // month labels + points
+    ctx.textAlign = "center"; ctx.textBaseline = "top"; ctx.fillStyle = C("--ink-faint");
+    for (var i2 = 0; i2 < 12; i2++) {
+      ctx.beginPath();
+      ctx.arc(x(i2), y(vals[i2]), 3, 0, Math.PI * 2);
+      ctx.fillStyle = (vals[i2] >= 0 ? C("--pos") : C("--neg"));
+      ctx.fill();
+      ctx.fillStyle = C("--ink-faint");
+      ctx.fillText(MONTHS[i2], x(i2), padT + plotH + 8);
+    }
+    // break-even marker
+    if (r.beCum) {
+      var bx = x(r.beCum - 1);
+      ctx.strokeStyle = C("--accent"); ctx.lineWidth = 1.2; ctx.setLineDash([3,3]);
+      ctx.beginPath(); ctx.moveTo(bx, padT); ctx.lineTo(bx, padT + plotH); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = C("--accent"); ctx.textAlign = "center"; ctx.textBaseline = "bottom";
+      ctx.font = '600 11px system-ui, sans-serif';
+      ctx.fillText("break-even", bx, padT + 11);
+    }
+  }
+
+  function labels() {
+    $("ramp-cur").textContent = state.ramp + "%";
+    $("gm-cur").textContent = state.gm + "%";
+    $("price-cur").textContent = "$" + state.price.toLocaleString("en-US");
+    $("rent-cur").textContent = "$" + state.rent.toLocaleString("en-US") + "/mo";
+    $("ti-cur").textContent = "$" + state.ti.toLocaleString("en-US");
+    $("gmsal-cur").textContent = "$" + state.gmsal.toLocaleString("en-US") + "/mo";
+  }
+
+  function matchPreset() {
+    var found = null;
+    Object.keys(PRESETS).forEach(function (k) {
+      var p = PRESETS[k], ok = true;
+      Object.keys(p).forEach(function (f) { if (p[f] !== state[f]) ok = false; });
+      if (ok) found = k;
+    });
+    document.querySelectorAll("button.preset").forEach(function (b) {
+      b.classList.toggle("active", b.getAttribute("data-p") === found);
+    });
+  }
+
+  function render() {
+    labels();
+    var r = compute(state);
+    renderKPIs(r);
+    renderTable(r);
+    renderCapital(r);
+    renderMatrix();
+    drawChart(r);
+    matchPreset();
+  }
+
+  ["ramp","gm","price","rent","ti","gmsal"].forEach(function (id) {
+    $(id).addEventListener("input", function () { state[id] = parseInt(this.value, 10); render(); });
+  });
+  document.querySelectorAll("button.preset").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var p = PRESETS[this.getAttribute("data-p")];
+      Object.keys(p).forEach(function (f) { state[f] = p[f]; $(f).value = p[f]; });
+      render();
+    });
+  });
+  window.addEventListener("resize", function () { drawChart(compute(state)); });
+  var mq = window.matchMedia("(prefers-color-scheme: dark)");
+  if (mq.addEventListener) mq.addEventListener("change", function(){ drawChart(compute(state)); });
+  var obs = new MutationObserver(function(){ drawChart(compute(state)); });
+  obs.observe(document.documentElement, { attributes:true, attributeFilter:["data-theme"] });
+
+  render();
+})();
+</script>

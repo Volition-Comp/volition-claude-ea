@@ -1,0 +1,36 @@
+Priority,Brand,Dealership,First Name,Last Name,Title,Email,Phone,Lead Quality,Call Status,Date Contacted,Notes,Apollo ID
+P1,Ford,Loveland Ford Lincoln,JD,Smith,Commercial Fleet Manager,jdsmith@loveford.com,,,Not called,,,5ab1eadfa6da98f7d359af14
+P1,Ford,Loveland Ford Lincoln,Eli,Hodapp,Commercial Fleet Sales Manager,eli-h@loveford.com,,,Not called,,,69f820af8d35d30001be2286
+P1,Ford,O'Meara Ford,Jorge,Estrada,Fleet Manager,jestrada@omearaford.com,,,Not called,,,61b463679f86330001118990
+P1,Ford,O'Meara Ford,Adeline,Lukosi,Fleet Manager,adeline.lukosi@omearaford.com,,,Not called,,,67bb79bc40a45a000157e1bd
+P1,Ford,O'Meara Ford,Mike,Magree,Fleet Sales Manager,,,,Not called,,No email - call main line,54a2870f74686930c203a829
+P2,Ford,O'Meara Ford,Adam,Armenta,Fleet Sales,,,,Not called,,No email - call main line,67ba288393654800018fd063
+P2,Ford,O'Meara Ford,Nathaniel,Johnston,General Sales Manager,njohnston@omearaford.com,,,Not called,,,54a42a29746869320914ec31
+P1,Ford,Phil Long Ford of Denver,Cole,Green,Fleet Account Manager,chgreen@phillong.com,,,Not called,,,6696de3aac8dae0001be41fe
+P1,Ford,Phil Long Ford of Denver,Tom,Nolan,Commercial Fleet Sales,tom@phillongdenver.com,,,Not called,,Email extrapolated - verify,69eec0fe71880f00019667ad
+P1,Ford,Schomp Ford,Fred,Wucherpfennig,Fleet/Broker Manager,fred.wucherpfennig@schomp.com,,,Not called,,,54a270597468693fda692e23
+P2,Ford,Brighton Ford,Gene,Young,Fleet Sales,,,,Not called,,No email - call main line,5e76ce55da8d1d00019ff681
+P2,Ford,Columbine Ford,Robi,Sifers,General Sales Manager,rsifers@columbineford.com,,,Not called,,,64f48a71356c610001f3a78c
+P2,Ford,Interstate Ford,Nick,Velasquez,General Sales Manager,nickv@i25ford.com,,,Not called,,,557148b77369645310864200
+P2,Ford,Phil Long Ford of Chapel Hills,Jamie,Passarelli,Sales Manager,jpassarelli@phillongford.com,,,Not called,,,54a9b6bb7468692d1c250517
+P1,Chevrolet,Ed Bozarth Chevrolet,Donald,Schroeder,Fleet Director,dschroeder@edbozarth.com,,,Not called,,,5fdaaf3da2fd650001028514
+P1,Chevrolet,Ed Bozarth Chevrolet,Jake,Blecha,Fleet and Commercial Account Manager,jblecha@edbozarth.com,,,Not called,,,557090c97369641b3a860900
+P1,Chevrolet,Ed Bozarth Chevrolet,Blake,Bratchell,Fleet & Commercial Account Manager,bbratchell@edbozarth.com,,,Not called,,,6981ae4825f7f000011fb4fe
+P1,Chevrolet,Ed Bozarth Chevrolet,Vincent,Fontes,Fleet Sales Manager,,,,Not called,,No email - call main line,5e5fa72b8db691000128d504
+P1,Chevrolet,Ed Bozarth Chevrolet,Roger,Breeding,Fleet Manager,,,,Not called,,No email - call main line,54ec42b47468694311c29b71
+P1,Chevrolet,Stevinson Chevrolet,Blake,Bratchell,Commercial & Fleet Sales,bbratchell@stevinsonauto.com,,,Not called,,Also listed at Ed Bozarth - verify current store,57c5a81ca6da9830acd8ed9d
+P1,Chevrolet,Stevinson Chevrolet,John,McDonough,Commercial Fleet Sales,,,,Not called,,No email - call main line,627373be3d4cda0001d09764
+P1,Chevrolet,Stevinson Chevrolet,Don,Schroeder,Fleet Manager,,,,Not called,,No email - call main line,5b3505dca6da98b349dee05a
+P2,Chevrolet,Stevinson Chevrolet,Francisco,Aguilar,General Sales Manager,fraguilar@stevinsonauto.com,,,Not called,,,640f6bf9604ac900010a6565
+P1,GMC,Alpine Buick GMC,Michael,Malone,Fleet Director,michaelm@alpineautomotive.com,,,Not called,,,5b2d30b1a6da98891e4befd3
+P1,GMC,Alpine Buick GMC,Daniel,Bernhardt,Fleet and Commercial Sales Manager,daniel@alpineautomotive.com,,,Not called,,,6139fb9934aa53000145a6b7
+P1,GMC,AutoNation Buick GMC Park Meadows,Dave,Fallt,Fleet Manager,falltd@autonation.com,,,Not called,,,557113da736964059d210200
+P2,GMC,AutoNation Buick GMC West,Jeremy,Kramer,Sales Manager,kramerj@autonation.com,,,Not called,,,5570488d73696428bb814400
+P1,Mercedes-Benz,Mercedes-Benz of Colorado Springs,Jonathan,Amos,Fleet Manager,jamos@benzcoloradosprings.com,,,Not called,,,61f394ca36b6690001907970
+P2,Mercedes-Benz,Mercedes-Benz of Colorado Springs,Glenn,Hamill,Sales Manager,ghamill@benzcoloradosprings.com,,,Not called,,,54a22a657468693cdd0c9712
+P2,Mercedes-Benz,Mercedes-Benz of Littleton,Wayne,Pierce,New Car Sales Manager,wpierce@mercedesoflittleton.com,,,Not called,,,593f0bf2a6da988e328acc53
+P2,Mercedes-Benz,Murray Motor Imports (Denver),Ricky,Ruth,General Sales Manager,,,,Not called,,No email - call main line,54a5490b7468693442d9c48b
+P2,Ram,Prestige Chrysler Dodge,Jake,Billings,General Sales Manager,jakeb@prestigedodge.com,,,Not called,,,60c5ba1c375149000125a3f3
+P2,Ram,Valley Chrysler Dodge,Chris,Boggs,General Sales Manager,chris@boulderdodge.com,,,Not called,,,5ab987b3a6da98b7224bd03a
+P2,Ram,Castle Rock CDJR,Kiersten,Peterson,General Sales Manager,,,,Not called,,No email - call main line,54a7749f74686975f895c036
+P3,Ram,Christopher's Dodge Ram,Ryan,Leiker,Sales Representative,ryan.leiker@cdodge.com,,,Not called,,,57d39ca4f651252c21748758

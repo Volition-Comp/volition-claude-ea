@@ -1,0 +1,589 @@
+<title>Balance Sheet — Items to Address</title>
+<style>
+  :root {
+    --paper: #F5F7F5;
+    --surface: #FFFFFF;
+    --ink: #18211D;
+    --ink-soft: #49544E;
+    --ink-faint: #7A847E;
+    --line: #E2E7E3;
+    --accent: #1F5C4A;
+    --accent-soft: #E7F0EC;
+    --warn: #916312;
+    --warn-soft: #F6ECD3;
+    --crit: #97382B;
+    --crit-soft: #F4E1DD;
+    --good: #2C7A57;
+    --good-soft: #E1F0E8;
+    --shadow: 0 1px 2px rgba(24,33,29,.04), 0 6px 20px rgba(24,33,29,.05);
+
+    --font-display: Georgia, "Times New Roman", serif;
+    --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+
+    --maxw: 900px;
+    --step: clamp(2rem, 4vw, 3rem);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #10140F;
+      --surface: #191F1B;
+      --ink: #E7ECE8;
+      --ink-soft: #AAB4AE;
+      --ink-faint: #6F7973;
+      --line: #29312C;
+      --accent: #5FAE8F;
+      --accent-soft: #1A2822;
+      --warn: #D6A24A;
+      --warn-soft: #29220F;
+      --crit: #DA8072;
+      --crit-soft: #2C1814;
+      --good: #62BC91;
+      --good-soft: #142219;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.28);
+    }
+  }
+  :root[data-theme="light"] {
+    --paper: #F5F7F5; --surface: #FFFFFF; --ink: #18211D; --ink-soft: #49544E;
+    --ink-faint: #7A847E; --line: #E2E7E3; --accent: #1F5C4A; --accent-soft: #E7F0EC;
+    --warn: #916312; --warn-soft: #F6ECD3; --crit: #97382B; --crit-soft: #F4E1DD;
+    --good: #2C7A57; --good-soft: #E1F0E8;
+    --shadow: 0 1px 2px rgba(24,33,29,.04), 0 6px 20px rgba(24,33,29,.05);
+  }
+  :root[data-theme="dark"] {
+    --paper: #10140F; --surface: #191F1B; --ink: #E7ECE8; --ink-soft: #AAB4AE;
+    --ink-faint: #6F7973; --line: #29312C; --accent: #5FAE8F; --accent-soft: #1A2822;
+    --warn: #D6A24A; --warn-soft: #29220F; --crit: #DA8072; --crit-soft: #2C1814;
+    --good: #62BC91; --good-soft: #142219;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.28);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: var(--step) clamp(1.1rem, 4vw, 2.4rem) 4rem;
+  }
+  .num { font-variant-numeric: tabular-nums; font-family: var(--font-mono); }
+
+  /* Masthead */
+  .mast { border-bottom: 2px solid var(--ink); padding-bottom: 1.4rem; margin-bottom: 1.8rem; }
+  .eyebrow {
+    font-size: .72rem; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; margin: 0 0 .7rem;
+  }
+  h1 {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(1.9rem, 4.4vw, 2.9rem); line-height: 1.08;
+    letter-spacing: -.01em; text-wrap: balance; margin: 0 0 .7rem;
+  }
+  .mast-meta {
+    display: flex; flex-wrap: wrap; gap: .4rem 1.6rem;
+    font-size: .86rem; color: var(--ink-soft); margin-top: 1rem;
+  }
+  .mast-meta b { color: var(--ink); font-weight: 600; }
+
+  /* Bottom line callout */
+  .callout {
+    background: var(--accent-soft);
+    border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+    border-radius: 12px; padding: 1.15rem 1.35rem;
+    margin: 1.8rem 0; display: flex; gap: .95rem; align-items: flex-start;
+  }
+  .callout .mark {
+    flex: none; width: 30px; height: 30px; border-radius: 7px;
+    background: var(--accent); color: var(--surface);
+    display: grid; place-items: center; font-family: var(--font-display);
+    font-weight: 700; font-size: 1.05rem; margin-top: .05rem;
+  }
+  .callout p { margin: 0; font-size: .95rem; color: var(--ink); }
+  .callout b { color: var(--accent); }
+
+  /* Stat tiles */
+  .stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(158px, 1fr)); gap: .8rem;
+    margin: 1.8rem 0 2.4rem;
+  }
+  .tile {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 12px; padding: 1.05rem 1.05rem 1.1rem; box-shadow: var(--shadow);
+  }
+  .tile .fig {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: 1.55rem; letter-spacing: -.01em; line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .tile .lab { font-size: .78rem; color: var(--ink-soft); margin-top: .5rem; line-height: 1.35; }
+  .tile.crit .fig { color: var(--crit); }
+  .tile.warn .fig { color: var(--warn); }
+  .tile.good .fig { color: var(--good); }
+
+  /* Section heading */
+  .sec-head {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: 1.02rem; letter-spacing: .02em; text-transform: uppercase;
+    color: var(--ink-soft); margin: 2.6rem 0 1rem; padding-bottom: .5rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* Owner legend */
+  .legend { display: flex; flex-wrap: wrap; gap: .9rem 1.4rem; font-size: .84rem; margin-top: .3rem; }
+  .legend div { display: flex; align-items: baseline; gap: .5rem; }
+  .legend .chip { position: relative; top: 1px; }
+  .legend span.who { color: var(--ink); font-weight: 600; }
+  .legend span.role { color: var(--ink-faint); }
+
+  /* Chips + pills */
+  .chip {
+    display: inline-block; font-size: .7rem; font-weight: 600;
+    letter-spacing: .04em; padding: .18rem .5rem; border-radius: 5px; white-space: nowrap;
+  }
+  .chip.muhammad { background: var(--accent-soft); color: var(--accent); }
+  .chip.cpa { background: var(--crit-soft); color: var(--crit); }
+  .chip.adan { background: var(--warn-soft); color: var(--warn); }
+
+  .pill {
+    display: inline-flex; align-items: center; gap: .4rem;
+    font-size: .7rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+    padding: .2rem .55rem; border-radius: 100px;
+  }
+  .pill::before { content: ""; width: 6px; height: 6px; border-radius: 100px; background: currentColor; }
+  .pill.hold { background: var(--crit-soft); color: var(--crit); }
+  .pill.cleanup { background: var(--warn-soft); color: var(--warn); }
+  .pill.structural { background: var(--accent-soft); color: var(--accent); }
+  .pill.ready { background: var(--good-soft); color: var(--good); }
+
+  /* Action cards */
+  .card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 13px; box-shadow: var(--shadow);
+    margin-bottom: 1.05rem; overflow: hidden;
+    display: grid; grid-template-columns: 5px 1fr;
+  }
+  .card .stripe { background: var(--accent); }
+  .card.s-hold .stripe { background: var(--crit); }
+  .card.s-cleanup .stripe { background: var(--warn); }
+  .card.s-structural .stripe { background: var(--accent); }
+  .card.s-ready .stripe { background: var(--good); }
+  .card .body { padding: 1.15rem 1.3rem 1.25rem; min-width: 0; }
+
+  .card-top {
+    display: flex; flex-wrap: wrap; align-items: baseline;
+    gap: .55rem .8rem; margin-bottom: .55rem;
+  }
+  .card-top h3 {
+    font-family: var(--font-display); font-weight: 600; font-size: 1.16rem;
+    letter-spacing: -.005em; margin: 0; flex: 1 1 auto; min-width: 12ch;
+  }
+  .amount {
+    font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+    font-weight: 600; font-size: 1.02rem; color: var(--ink); white-space: nowrap;
+  }
+  .amount.neg { color: var(--crit); }
+  .card .what { margin: .1rem 0 .5rem; font-size: .93rem; color: var(--ink-soft); }
+  .card .what b { color: var(--ink); font-weight: 600; }
+  .meta-row { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: .85rem; align-items: center; }
+
+  /* Item tables */
+  .tbl-scroll { overflow-x: auto; margin-top: .35rem; }
+  table { border-collapse: collapse; width: 100%; font-size: .86rem; }
+  th, td { text-align: left; padding: .5rem .7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  thead th {
+    font-size: .68rem; letter-spacing: .07em; text-transform: uppercase;
+    color: var(--ink-faint); font-weight: 600; border-bottom: 1px solid var(--line);
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  td.r, th.r { text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td .src { color: var(--ink-faint); font-size: .8rem; }
+  .flag { color: var(--crit); font-weight: 600; }
+
+  ul.plain { margin: .3rem 0 0; padding-left: 1.1rem; }
+  ul.plain li { margin: .3rem 0; font-size: .9rem; color: var(--ink-soft); }
+  ul.plain li b { color: var(--ink); font-weight: 600; }
+
+  /* Sequence */
+  .seq { list-style: none; counter-reset: s; margin: .4rem 0 0; padding: 0; }
+  .seq li {
+    counter-increment: s; position: relative; padding: .75rem 0 .75rem 2.9rem;
+    border-bottom: 1px solid var(--line); font-size: .93rem;
+  }
+  .seq li:last-child { border-bottom: none; }
+  .seq li::before {
+    content: counter(s); position: absolute; left: 0; top: .7rem;
+    width: 1.9rem; height: 1.9rem; border-radius: 8px;
+    background: var(--accent); color: var(--surface);
+    font-family: var(--font-mono); font-weight: 600; font-size: .9rem;
+    display: grid; place-items: center;
+  }
+  .seq li b { color: var(--ink); }
+  .seq li .owner-inline { color: var(--ink-faint); font-size: .82rem; }
+
+  footer {
+    margin-top: 2.6rem; padding-top: 1.2rem; border-top: 1px solid var(--line);
+    font-size: .8rem; color: var(--ink-faint); line-height: 1.6;
+  }
+  footer b { color: var(--ink-soft); }
+  a { color: var(--accent); }
+</style>
+
+<div class="wrap">
+
+  <header class="mast">
+    <p class="eyebrow">Volition Components &middot; Financial Cleanup</p>
+    <h1>Balance Sheet — Items to Address</h1>
+    <div class="mast-meta">
+      <span>Prepared for <b>Adan Gonzales</b></span>
+      <span>As of <b>July 23, 2026</b></span>
+      <span>Source: <b>Odoo (production)</b></span>
+    </div>
+  </header>
+
+  <div class="callout">
+    <div class="mark">&#10003;</div>
+    <p><b>The business is sound.</b> Accounts receivable, accounts payable, customer deposits, and sales tax are all fundamentally clean. Most of what follows is bookkeeping housekeeping: stale 2023 journal entries, a mid-stream switch to cash-basis tax reporting that left balances scattered, one mistyped account, and unmatched bank-feed items. The one area that needs genuine reconciliation, not just tidying, is the <b>payroll liabilities</b>, where manually coded bank payments have drifted for two years. A large share of the odd balances traces to two hand-built entries from the 2023 QuickBooks migration (see below). None of it means money is missing.</p>
+  </div>
+
+  <div class="stats">
+    <div class="tile crit">
+      <div class="fig">$12,256</div>
+      <div class="lab">Van-sale loss sitting off the income statement entirely</div>
+    </div>
+    <div class="tile warn">
+      <div class="fig">$34,518</div>
+      <div class="lab">Stale 2023 journal entries to trace and clear (GRNI + deposits)</div>
+    </div>
+    <div class="tile good">
+      <div class="fig">&#8776; $0</div>
+      <div class="lab">Net sales-tax position once five accounts are consolidated</div>
+    </div>
+    <div class="tile">
+      <div class="fig">1</div>
+      <div class="lab">New cash-basis balance sheet, built and tested in staging</div>
+    </div>
+    <div class="tile warn">
+      <div class="fig">$3,320</div>
+      <div class="lab">One payroll miscode reclass that clears two accounts at once</div>
+    </div>
+    <div class="tile">
+      <div class="fig">2</div>
+      <div class="lab">2023 migration entries behind the deposits, GRNI, and OpEx puzzles</div>
+    </div>
+  </div>
+
+  <div class="sec-head">Who owns what</div>
+  <div class="legend">
+    <div><span class="chip muhammad">MUHAMMAD</span> <span class="role">Bookkeeper — matching, reconciling, reclassifications</span></div>
+    <div><span class="chip cpa">BALANCED&nbsp;LEDGERS</span> <span class="role">CPA &amp; payroll — prior-year and tax decisions, sign-off</span></div>
+    <div><span class="chip adan">ADAN</span> <span class="role">Decisions and approvals</span></div>
+  </div>
+
+  <div class="sec-head">Items, most consequential first</div>
+
+  <!-- 1. Van loss -->
+  <article class="card s-hold">
+    <div class="stripe"></div>
+    <div class="body">
+      <div class="card-top">
+        <h3>Van-sale loss booked off the balance sheet</h3>
+        <span class="amount">$12,255.90</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill hold">Hold — CPA first</span>
+        <span class="chip cpa">BALANCED LEDGERS</span>
+        <span class="chip adan">ADAN</span>
+      </div>
+      <p class="what">The account <b>Gain/Loss on Disposal of Van (400104)</b> is typed as an <b>Off-Balance-Sheet</b> account, which is memo-only. So the real loss from the April 2024 van sale never reached the income statement, and <b>2024 profit is overstated by this amount.</b> The fix is to re-type the account as an expense so the loss flows to the P&amp;L.</p>
+      <ul class="plain">
+        <li><b>Why it&rsquo;s on hold:</b> this changes 2024 net income and taxable income. Adan is speaking with the CPA before anything moves in production.</li>
+        <li><b>If 2024 is closed/filed:</b> don&rsquo;t reopen it. Book a current-dated reclassification instead, at the CPA&rsquo;s direction.</li>
+        <li><b>Source entry:</b> <span class="num">MISC/2024/04/0005</span> &mdash; &ldquo;Sale of Van and Loan Payoff,&rdquo; 2024-04-24.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- Migration root cause -->
+  <article class="card s-structural">
+    <div class="stripe"></div>
+    <div class="body">
+      <div class="card-top">
+        <h3>Root cause: two 2023 QuickBooks migration entries</h3>
+        <span class="amount">$20,532 clean fix</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill structural">Root cause</span>
+        <span class="chip cpa">BALANCED LEDGERS</span>
+        <span class="chip muhammad">MUHAMMAD</span>
+      </div>
+      <p class="what">We tied Odoo&rsquo;s year-end 2023 balances to the QuickBooks trial balance and balance sheet. <b>Most accounts migrated perfectly.</b> But two hand-built entries dated 12/31/2023 scattered residuals across several accounts and are behind a large share of this whole list &mdash; they&rsquo;re not separate mysteries.</p>
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr><th>Migration entry</th><th>What it caused</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><b>&ldquo;Constance Deleted Transaction 2023&rdquo;</b> (MISC/2023/12/0004)</td>
+              <td>Overstated the OpEx bank by <b>$20,531.66</b> ($37,741.74 vs. the correct $17,210.08) and plugged the difference into Outstanding Receipts</td>
+            </tr>
+            <tr>
+              <td><b>&ldquo;Reversal of 2023 Transactions&rdquo;</b> (MISC/2023/12/0002)</td>
+              <td>Source of the <b>$16,136</b> Customer Prepaid Deposits balance, most of the <b>-$52,793</b> Outstanding Receipts, and part of the GRNI and tax-transition residuals</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="plain">
+        <li><b>Clean win:</b> one <b>$20,531.66</b> reclass corrects the OpEx bank <i>and</i> clears that much of Outstanding Receipts at the same time.</li>
+        <li><b>Reassuring:</b> everything that should have migrated cleanly did &mdash; fixed assets, both loans, inventory, the credit card, five of six banks, partner equity, and every payroll liability balance tie to QuickBooks to the penny.</li>
+        <li>All of these touch 2023 &mdash; route through Balanced Ledgers. Full tie-out is in the migration reconciliation worksheet.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- Payroll liabilities -->
+  <article class="card s-cleanup">
+    <div class="stripe"></div>
+    <div class="body">
+      <div class="card-top">
+        <h3>Payroll liabilities never reconciled</h3>
+        <span class="amount">6 accounts</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill cleanup">Cleanup</span>
+        <span class="chip muhammad">MUHAMMAD</span>
+        <span class="chip cpa">BALANCED LEDGERS</span>
+      </div>
+      <p class="what">Balanced Ledgers sends the correct payroll debits and credits; the breakdown is on the bookkeeping side, where the <b>OpEx bank-feed payments are manually coded, often to the wrong account.</b> Payroll has also been booked two different ways over time (a Salaries journal, then manual spreadsheet entries), and the liabilities never get reconciled back to zero.</p>
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr><th>Issue</th><th class="r">Amount</th><th>Fix</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><b>Child-support garnishments miscoded to CO FAMLI</b> (2024)</td>
+              <td class="r">$3,320</td>
+              <td>Clean reclass of 8 payments &mdash; clears <b>both</b> Wage Garnishment and CO FAMLI to under $300</td>
+            </tr>
+            <tr>
+              <td>Health premiums split 50/50 employee vs. employer</td>
+              <td class="r">&mdash;</td>
+              <td>Reconcile each to actual withholding; the employer share is expense, not a liability</td>
+            </tr>
+            <tr>
+              <td>Payroll Clearing not netting to zero (2026)</td>
+              <td class="r">$9,998</td>
+              <td>Reconcile accruals to the net-pay bank payments</td>
+            </tr>
+            <tr>
+              <td>Federal Taxes 941/944 over-remitted or under-accrued</td>
+              <td class="r">$6,699</td>
+              <td>Reconcile to the 941 filings</td>
+            </tr>
+            <tr>
+              <td><b>2023 QuickBooks migration balances never cleared</b> (CO withholding, CO unemployment, federal 941/944)</td>
+              <td class="r">$6,700</td>
+              <td>Confirmed against the 12/31/2023 QB balance sheet; clear the opening balances against filings</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="plain">
+        <li>The garnishment reclass is a <b>clean, provable win</b>, laid out line by line in the payroll correction worksheet.</li>
+        <li><b>Carryover confirmed:</b> the exact 2023 QuickBooks closing balances ($3,920 CO withholding, $884.17 CO unemployment, $1,895.46 federal 941/944) are still embedded in today&rsquo;s Odoo payroll accounts. Part of this mess predates the bookkeeping and came in with the QuickBooks migration.</li>
+        <li>The 2024 and 2023 items touch prior years &mdash; loop in Balanced Ledgers before booking those.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 2. Stale 2023 JEs -->
+  <article class="card s-cleanup">
+    <div class="stripe"></div>
+    <div class="body">
+      <div class="card-top">
+        <h3>Two stale 2023 year-end journal entries</h3>
+        <span class="amount">$34,518.39</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill cleanup">Cleanup</span>
+        <span class="chip muhammad">MUHAMMAD</span>
+      </div>
+      <p class="what">The two largest oddities on the balance sheet are both old year-end adjusting entries booked with <b>no partner attached</b>, never cleared. Highest-dollar and most likely pure cleanup &mdash; trace these first.</p>
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr><th>Account</th><th>Entry</th><th class="r">Amount</th><th>Note</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Inventory Interim (Received) / GRNI</td>
+              <td class="src">MISC / 2023 year-end</td>
+              <td class="r">$18,382.08</td>
+              <td>Unassigned reversal, sits inside the GRNI account</td>
+            </tr>
+            <tr>
+              <td>Customer Prepaid Deposits</td>
+              <td class="src">MISC/2023/12/0002</td>
+              <td class="r">$16,136.31</td>
+              <td>&ldquo;Reversal of 2023 Transactions&rdquo; &mdash; the entire deposits balance</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="plain">
+        <li>Every <b>real</b> customer deposit already nets to zero &mdash; this one 2023 entry <b>is</b> the whole odd deposits balance.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 3. GRNI vendor mismatches -->
+  <article class="card s-cleanup">
+    <div class="stripe"></div>
+    <div class="body">
+      <div class="card-top">
+        <h3>GRNI vendor mismatches (received vs. invoiced)</h3>
+        <span class="amount">net &minus;$23,833</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill cleanup">Cleanup</span>
+        <span class="chip muhammad">MUHAMMAD</span>
+      </div>
+      <p class="what">Inventory Interim (Received) bridges &ldquo;parts arrived&rdquo; and &ldquo;bill entered.&rdquo; The <b>&minus;$23,833 accrual balance is normal</b> (goods received, not yet billed). <b>Read it on accrual, never cash basis</b> &mdash; the ~$50,109 that shows on the cash-basis view is a meaningless artifact. A few vendors have amounts that should have netted out and are worth matching.</p>
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr><th>Vendor</th><th>Direction</th><th class="r">Amount</th></tr></thead>
+          <tbody>
+            <tr><td>Tommy Gate</td><td>Received, not invoiced</td><td class="r">&minus;$7,307.50</td></tr>
+            <tr><td>AMF Bruns</td><td>Billed, not received</td><td class="r">$4,623.66</td></tr>
+            <tr><td>Knapheide</td><td>Received, not invoiced</td><td class="r">&minus;$4,151.00</td></tr>
+            <tr><td>Reefervan</td><td>Billed, not received</td><td class="r">$3,695.00</td></tr>
+            <tr><td>Espar of Michigan</td><td>Billed, not received</td><td class="r">$3,262.45</td></tr>
+            <tr><td>TouRig</td><td>Received, not invoiced</td><td class="r">&minus;$2,618.98</td></tr>
+            <tr><td>Federal Signal</td><td>Received, not invoiced</td><td class="r">&minus;$2,515.00</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </article>
+
+  <!-- 4. Sales tax -->
+  <article class="card s-structural">
+    <div class="stripe"></div>
+    <div class="body">
+      <div class="card-top">
+        <h3>Sales-tax accounts spread across five ledgers</h3>
+        <span class="amount">net &minus;$75.68</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill structural">Structural</span>
+        <span class="chip muhammad">MUHAMMAD</span>
+        <span class="chip cpa">BALANCED LEDGERS</span>
+      </div>
+      <p class="what">The same sales-tax liability is scattered across five accounts that offset each other, so each line looks alarming on its own. <b>Combined, they net to about &minus;$76 &mdash; essentially flat.</b> The scatter comes from a mid-stream switch to cash-basis tax reporting plus parallel collected accounts.</p>
+      <ul class="plain">
+        <li><b>Consolidate</b> to one collected account plus the cash-basis transition account; use or retire the per-jurisdiction accounts consistently.</li>
+        <li><b>Clear two stranded residuals:</b> <span class="num">$1,510.91</span> in CO Dept of Revenue (200215) and <span class="num">$711.34</span> in Tax Payable Cash Basis Transition (200217).</li>
+        <li>Balanced Ledgers should bless the structure since it touches tax filings.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 5. AP -->
+  <article class="card s-cleanup">
+    <div class="stripe"></div>
+    <div class="body">
+      <div class="card-top">
+        <h3>Accounts Payable &mdash; unmatched items</h3>
+        <span class="amount">~$346 + aged</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill cleanup">Cleanup</span>
+        <span class="chip muhammad">MUHAMMAD</span>
+      </div>
+      <p class="what">Real payables (~$67,000) are healthy. What distorts AP on a cash basis is a small pile of unmatched debits, plus two aged oddities.</p>
+      <ul class="plain">
+        <li><b>~$346</b> of Amazon bank-feed charges coded straight to AP and never matched to a bill, plus a <b>$153.52</b> Home Depot return sitting open.</li>
+        <li><b>$1,000</b> Phil Long bill from May 2025, over a year old &mdash; likely needs clearing.</li>
+        <li>One <b>DTI Trucks</b> bill has no invoice number recorded.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 6. AR -->
+  <article class="card s-cleanup">
+    <div class="stripe"></div>
+    <div class="body">
+      <div class="card-top">
+        <h3>Accounts Receivable &mdash; two stray items</h3>
+        <span class="amount">$806.52</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill cleanup">Cleanup</span>
+        <span class="chip muhammad">MUHAMMAD</span>
+      </div>
+      <p class="what">Open receivables (~$92,000, led by Holman and Enterprise) are healthy and recent. Two small items need tidying.</p>
+      <ul class="plain">
+        <li><b>VKGG Inc.</b> &mdash; a $765.54 Stripe payment and a matching $765.54 reversal. They net to zero and just need reconciling so they stop showing as two open lines.</li>
+        <li><b>$40.98</b> Amazon credit miscoded into AR that belongs on the vendor side.</li>
+      </ul>
+    </div>
+  </article>
+
+  <!-- 7. Amazon systemic -->
+  <article class="card s-cleanup">
+    <div class="stripe"></div>
+    <div class="body">
+      <div class="card-top">
+        <h3>Amazon bank feed &mdash; recurring miscoding</h3>
+        <span class="amount">Systemic</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill cleanup">Prevent</span>
+        <span class="chip muhammad">MUHAMMAD</span>
+      </div>
+      <p class="what">The same root cause sits behind several items above: Amazon bank-feed transactions keep landing in AP and AR instead of being matched to bills or expensed. <b>Set up a bank rule for Amazon</b> so these stop piling up and future cleanups shrink.</p>
+    </div>
+  </article>
+
+  <!-- 8. New report -->
+  <article class="card s-ready">
+    <div class="stripe"></div>
+    <div class="body">
+      <div class="card-top">
+        <h3>New report: Balance Sheet (Cash Basis, Adjusted)</h3>
+        <span class="amount">Built &amp; tested</span>
+      </div>
+      <div class="meta-row">
+        <span class="pill ready">Ready for prod</span>
+        <span class="chip adan">ADAN</span>
+      </div>
+      <p class="what">A true cash-basis balance sheet, built and tested in staging. It strips the accrual accounts that shouldn&rsquo;t appear on a cash-basis view, foots correctly, and unfolds to account-level detail like the standard report.</p>
+      <ul class="plain">
+        <li><b>Excludes:</b> Accounts Receivable, Accounts Payable, Inventory Interim (both received and delivered), Bills to Receive, and Tax Payable Cash Basis Transition.</li>
+        <li><b>Equity plug</b> added so Assets = Liabilities + Equity still ties.</li>
+        <li>The report itself is a safe reporting view &mdash; porting it to production changes no data.</li>
+        <li><b>Two open decisions for Adan:</b> whether to also exclude inventory, and whether to rename the plug line for outside readers.</li>
+      </ul>
+    </div>
+  </article>
+
+  <div class="sec-head">Recommended sequence</div>
+  <ol class="seq">
+    <li><b>Van loss &mdash; Adan talks to the CPA first.</b> This one is on hold and blocks the reclass. <span class="owner-inline">Adan &rarr; Balanced Ledgers</span></li>
+    <li><b>Reclass the 2024 Family Support Registry garnishment payments</b> ($3,320) &mdash; a clean batch that clears two payroll accounts at once. Then work the broader payroll-liability reconciliation. <span class="owner-inline">Muhammad, with Balanced Ledgers data; CPA for the 2024 pieces</span></li>
+    <li><b>Correct the two 2023 migration entries</b>, starting with the OpEx <b>$20,531.66</b> reclass (fixes the bank and part of Outstanding Receipts in one move), then the deposits and GRNI residuals. <span class="owner-inline">Balanced Ledgers / CPA, prior-year</span></li>
+    <li><b>Trace the two 2023 reversal entries</b> ($18,382 GRNI + $16,136 deposits). Biggest dollars, most likely pure cleanup. <span class="owner-inline">Muhammad</span></li>
+    <li><b>Consolidate the sales-tax accounts</b> and clear the two residuals. Structural, and it improves every monthly read. <span class="owner-inline">Muhammad, blessed by Balanced Ledgers</span></li>
+    <li><b>Match the AP / AR stragglers</b> and set up the Amazon bank rule so they stop recurring. <span class="owner-inline">Muhammad</span></li>
+    <li><b>Work the GRNI vendor mismatches.</b> Lower priority; they self-correct as bills catch up. <span class="owner-inline">Muhammad</span></li>
+    <li><b>Port the cash-basis report to production</b> once Adan settles the two report options. <span class="owner-inline">Adan</span></li>
+  </ol>
+
+  <footer>
+    <p>Figures pulled from Odoo production on <b>July 23, 2026</b>, except the new report, which was built and tested in staging. The van-loss account type has been changed in <b>staging only</b> as a test; production is unchanged pending the CPA conversation. Detailed line-item backup lives in the accompanying cleanup worksheet.</p>
+  </footer>
+
+</div>
