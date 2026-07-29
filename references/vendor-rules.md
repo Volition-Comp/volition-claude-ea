@@ -77,6 +77,34 @@ Labor: **LABLRDD** Ladder Rack Installation, Double Drop Down (id 3950, $595).
 Catalog list prices already include the standard 1.67x markup on Prime Design dealer cost, so
 don't mark them up again.
 
+## Where the freight line goes
+
+Freight is charged as its own `[S&H] Shipping` line inside a **pricing section**, never as a
+standalone FREIGHT section. Which section it lands in is a judgement call, and the rule is:
+
+**Put the bulk of the freight on the largest, most relevant item in the shipment.**
+
+The reason is how it reads to the customer. Freight parked at the bottom of the quote falls into
+whatever section happens to be last, and a small section then carries an absurd-looking number.
+On S01447 the last section was two 8" running board kits. With $1,665 of freight sitting under it,
+the section read $3,357 for two steps. Any person reading that thinks it's ridiculous. Moved onto
+the floor (the largest line in the shipment), it disappears into a number that makes sense.
+
+Splitting across sections is fine, and is the right call when the parts genuinely come from
+different vendors. S01447 ships the floor, seats, and Shift N Step hardware from Fenton, but the
+Braun lift comes direct from Braun, so it carries its own freight line:
+
+| Section | Freight cost | Covers |
+|---|---|---|
+| FLOOR & SEATING | $1,250 | the Fenton shipment |
+| SHIFT N STEP LIFT | $500 | the Braun lift, direct from the manufacturer |
+
+When you split, the section that holds the biggest item takes the larger share. An even split
+(e.g. $750 / $750) is also fine when the two shipments are comparable.
+
+Keep "Freight to Volition Components" as the last bullet in the Includes note of any section that
+carries a freight line, and leave it out of sections that don't.
+
 ## Pricing patterns (quick reference)
 
 - **Catalog pricing** = the product's `list_price`.

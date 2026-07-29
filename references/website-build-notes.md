@@ -78,6 +78,38 @@ categories.
 a Google Tag Manager container `GTM-P5MW3RZ` and the Apollo website tracker, both hand-pasted into
 Website > Custom Code (head, and a GTM noscript in footer).
 
+### Custom Code takes raw HTML only. QWeb does NOT run there.
+
+**Gotcha found 2026-07-24, live on prod for an unknown length of time.** The Website > Custom Code
+head/footer fields (`website.custom_code_head` / `custom_code_footer`) are injected into the page
+verbatim. They are **not** compiled as QWeb. Anything with `t-`, `<t>`, `t-att-`, `xpath`, or
+`t-inherit` ships to the browser as literal broken markup.
+
+Someone had pasted this into the head field, presumably trying to add a canonical tag:
+
+```html
+<t t-name="website.layout" t-inherit="website.layout" t-inherit-mode="primary">
+  <xpath expr="//head" position="inside">
+    <link t-att-href="request.httprequest.url" rel="canonical"/>
+  </xpath>
+</t>
+```
+
+The `<t>` wrapper did nothing, and the inner tag went out on **every page** as
+`<link t-att-href="..." rel="canonical"/>` with no `href`. Result: two canonical tags per page, one
+of them empty. Google discards all `rel=canonical` hints when it finds more than one, so the site
+had no canonical signal at all. That's what split www vs non-www into two competing homepages in
+Search Console. Fix was deleting the block. **Odoo already emits a correct canonical natively**, so
+never hand-add one.
+
+Rules of thumb:
+- Custom Code is for third-party snippets (GTM, Apollo, pixels). Plain HTML and JS only.
+- Anything needing QWeb (server-side values, template inheritance) must be a real `ir.ui.view`.
+  See the page-build pattern below.
+- After touching Custom Code, verify on the live page, not in the admin box:
+  `curl -sk <url> | grep -c 'rel="canonical"'` should return `1`. (Add `-k`; this network's HTTPS
+  inspection makes curl fail otherwise. See the TLS notes.)
+
 **Odoo 19 has native GA4 ecommerce tracking. Don't build your own.** (Corrected 2026-07-22 after
 first believing stock sent pageviews only. It doesn't; it sends the full funnel, it was just dormant
 because no measurement ID was set.) Core file `website_sale/static/src/interactions/tracking.js`

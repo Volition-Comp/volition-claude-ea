@@ -253,9 +253,9 @@
   </div>
 
   <div class="stats">
-    <div class="tile crit">
+    <div class="tile good">
       <div class="fig">$12,256</div>
-      <div class="lab">Van-sale loss sitting off the income statement entirely</div>
+      <div class="lab">Van-sale loss now recognized on the 2024 P&amp;L (fixed in production)</div>
     </div>
     <div class="tile warn">
       <div class="fig">$34,518</div>
@@ -288,8 +288,8 @@
 
   <div class="sec-head">Items, most consequential first</div>
 
-  <!-- 1. Van loss -->
-  <article class="card s-hold">
+  <!-- 1. Van loss (RESOLVED) -->
+  <article class="card s-ready">
     <div class="stripe"></div>
     <div class="body">
       <div class="card-top">
@@ -297,14 +297,13 @@
         <span class="amount">$12,255.90</span>
       </div>
       <div class="meta-row">
-        <span class="pill hold">Hold — CPA first</span>
+        <span class="pill ready">Done</span>
         <span class="chip cpa">BALANCED LEDGERS</span>
         <span class="chip adan">ADAN</span>
       </div>
-      <p class="what">The account <b>Gain/Loss on Disposal of Van (400104)</b> is typed as an <b>Off-Balance-Sheet</b> account, which is memo-only. So the real loss from the April 2024 van sale never reached the income statement, and <b>2024 profit is overstated by this amount.</b> The fix is to re-type the account as an expense so the loss flows to the P&amp;L.</p>
+      <p class="what"><b>Resolved in production.</b> The account <b>Gain/Loss on Disposal of Van (400104)</b> was mistyped as <b>Off-Balance-Sheet</b>, so the April 2024 van-sale loss never reached the income statement. The CPA confirmed the loss belongs in <b>2024</b>, so the account was re-typed to Other Expense. The loss now flows to the 2024 P&amp;L (the entry is dated 2024-04-24), and on the current balance sheet it sits in Retained Earnings instead of the off-balance section.</p>
       <ul class="plain">
-        <li><b>Why it&rsquo;s on hold:</b> this changes 2024 net income and taxable income. Adan is speaking with the CPA before anything moves in production.</li>
-        <li><b>If 2024 is closed/filed:</b> don&rsquo;t reopen it. Book a current-dated reclassification instead, at the CPA&rsquo;s direction.</li>
+        <li><b>Effect:</b> 2024 net income is reduced by $12,255.90, recognizing the loss where it belongs; the off-balance section clears.</li>
         <li><b>Source entry:</b> <span class="num">MISC/2024/04/0005</span> &mdash; &ldquo;Sale of Van and Loan Payoff,&rdquo; 2024-04-24.</li>
       </ul>
     </div>
@@ -557,33 +556,32 @@
         <span class="amount">Built &amp; tested</span>
       </div>
       <div class="meta-row">
-        <span class="pill ready">Ready for prod</span>
+        <span class="pill ready">Live in production</span>
         <span class="chip adan">ADAN</span>
       </div>
-      <p class="what">A true cash-basis balance sheet, built and tested in staging. It strips the accrual accounts that shouldn&rsquo;t appear on a cash-basis view, foots correctly, and unfolds to account-level detail like the standard report.</p>
+      <p class="what"><b>Deployed to production.</b> A true cash-basis balance sheet, formatted like the QuickBooks statements Balanced Ledgers is used to. It strips the accrual accounts that shouldn&rsquo;t appear on a cash-basis view, foots correctly, and unfolds to account-level detail. Find it under Accounting &rarr; Reporting &rarr; Balance Sheet, in the report selector.</p>
       <ul class="plain">
         <li><b>Excludes:</b> Accounts Receivable, Accounts Payable, Inventory Interim (both received and delivered), Bills to Receive, and Tax Payable Cash Basis Transition.</li>
-        <li><b>Equity plug</b> added so Assets = Liabilities + Equity still ties.</li>
-        <li>The report itself is a safe reporting view &mdash; porting it to production changes no data.</li>
-        <li><b>Two open decisions for Adan:</b> whether to also exclude inventory, and whether to rename the plug line for outside readers.</li>
+        <li>The cash-basis balancing figure is folded into <b>Retained Earnings</b> (QuickBooks style), so there is no separate plug line.</li>
+        <li>A report is a read-only view &mdash; deploying it changed no ledger data.</li>
       </ul>
     </div>
   </article>
 
   <div class="sec-head">Recommended sequence</div>
   <ol class="seq">
-    <li><b>Van loss &mdash; Adan talks to the CPA first.</b> This one is on hold and blocks the reclass. <span class="owner-inline">Adan &rarr; Balanced Ledgers</span></li>
+    <li><b>Van loss &mdash; done.</b> The CPA confirmed it belongs in 2024; the account was re-typed to Other Expense in production, so the loss is now on the 2024 P&amp;L. <span class="owner-inline">Adan / Balanced Ledgers</span></li>
     <li><b>Reclass the 2024 Family Support Registry garnishment payments</b> ($3,320) &mdash; a clean batch that clears two payroll accounts at once. Then work the broader payroll-liability reconciliation. <span class="owner-inline">Muhammad, with Balanced Ledgers data; CPA for the 2024 pieces</span></li>
     <li><b>Correct the two 2023 migration entries</b>, starting with the OpEx <b>$20,531.66</b> reclass (fixes the bank and part of Outstanding Receipts in one move), then the deposits and GRNI residuals. <span class="owner-inline">Balanced Ledgers / CPA, prior-year</span></li>
     <li><b>Trace the two 2023 reversal entries</b> ($18,382 GRNI + $16,136 deposits). Biggest dollars, most likely pure cleanup. <span class="owner-inline">Muhammad</span></li>
     <li><b>Consolidate the sales-tax accounts</b> and clear the two residuals. Structural, and it improves every monthly read. <span class="owner-inline">Muhammad, blessed by Balanced Ledgers</span></li>
     <li><b>Match the AP / AR stragglers</b> and set up the Amazon bank rule so they stop recurring. <span class="owner-inline">Muhammad</span></li>
     <li><b>Work the GRNI vendor mismatches.</b> Lower priority; they self-correct as bills catch up. <span class="owner-inline">Muhammad</span></li>
-    <li><b>Port the cash-basis report to production</b> once Adan settles the two report options. <span class="owner-inline">Adan</span></li>
+    <li><b>Cash-basis report &mdash; done.</b> Deployed to production in QuickBooks format, unfolds and foots. <span class="owner-inline">Adan</span></li>
   </ol>
 
   <footer>
-    <p>Figures pulled from Odoo production on <b>July 23, 2026</b>, except the new report, which was built and tested in staging. The van-loss account type has been changed in <b>staging only</b> as a test; production is unchanged pending the CPA conversation. Detailed line-item backup lives in the accompanying cleanup worksheet.</p>
+    <p>Figures pulled from Odoo production on <b>July 23, 2026</b>. The cash-basis report is now live in production, and the van-loss account has been re-typed to Other Expense in production (the CPA confirmed the loss belongs in 2024). Detailed line-item backup lives in the accompanying cleanup and migration-reconciliation worksheets.</p>
   </footer>
 
 </div>

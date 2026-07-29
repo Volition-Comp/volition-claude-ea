@@ -76,9 +76,12 @@ explicit "go" before creating.
    - **Install labor lines** (`[LABORMTO]` id 2515), one per task, with the
      **install/positioning description in the `name`**, qty = hours.
    - **Freight last** (`[S&H] Shipping`), after the labor lines, only if a cost is given.
-     **Never give freight its own `line_section` header.** The shipping line lives inside a
-     pricing section (per-section when each package ships separately, or as the final line of
-     the last section for a single lumped freight). No standalone "FREIGHT" section, ever.
+     **Never give freight its own `line_section` header.** No standalone "FREIGHT" section, ever.
+     Put it on the **largest, most relevant item in the shipment**, not simply in the last
+     section. Freight dumped at the bottom lands on whatever section happens to be last and makes
+     a small section read absurdly (two running boards showing $3,357). Split across sections when
+     parts come from different vendors. See "Where the freight line goes" in
+     `references/vendor-rules.md`.
    Pattern per section: **section → Includes note → parts → labor → freight.**
    Good references: S01130, S01250 (Tofwerk).
 5. **Set the project name**: top-level `so_name` = the project name.

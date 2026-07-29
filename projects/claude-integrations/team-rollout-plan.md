@@ -116,9 +116,23 @@ their own login" rule in this doc, which is the safety net the whole plan leans 
 premium over the cheap options buys per-user identity. It is not buying the React app builder or
 the ECharts dashboards, which we will never touch.
 
-**The $257 is entirely a Track B cost.** Track A already works, free, on the local `odoo-mcp`
-connector running since June. If this were just Adan and Constance, we'd spend nothing on
-connectors. Cleaner framing: $257 is what it costs to get Tony and Esme into Odoo.
+**The $257 is mostly a Track B cost, but not only.** Track A already works, free, on the local
+`odoo-mcp` connector running since June, so the primary reason to buy the module is getting Tony
+and Esme into Odoo. But there's a real bonus for Adan and Constance too: the remote connector is
+cloud-hosted, so it also unlocks **Odoo from the phone app with the laptop closed**. The local
+connector can't do that (it's a program on the laptop, unreachable from the cloud app, even when
+the laptop is on). So once the module is live, Adan can do live Odoo lookups, record updates, and
+(once the skills are ported) estimates from the Claude app on his phone, no computer running.
+
+**What mobile actually delivers, ranked by how soon/smoothly:**
+- **Real-time reads** (open quotes, order status, customer lookup): works the moment Phase 4 is
+  done. Cleanest of the three; the connector queries Odoo live.
+- **Record updates:** work once writes are enabled and Odoo permissions allow. Gated on verifying
+  the remote connector has the guarded approve-step (see Phase 3 safety note).
+- **Writing estimates:** yes, but the heaviest, and it needs the write-estimates skill ported to
+  the remote connector first (Phase 3/5 work). Realistically the phone is the "kick it off and
+  review" surface for a 15+ line quote, not the build-from-scratch surface. The computer stays
+  better for heavy quote construction.
 
 **Naming confusion, for the record.** MCP Studio is listed as "AI React App, Module & EChart
 Builder," and the description leads with building AI chat interfaces inside Odoo. That reads like
@@ -194,18 +208,26 @@ since June.
 **Standing habit going forward:** operating knowledge goes in `references/`, not memory. Memory is
 per-person and per-machine and does not travel.
 
-- [ ] Add `/*.html` and `/jar.txt` to `.gitignore` (root-scoped, per decision 3)
-- [ ] Triage the untracked files: commit the real work, including the Holman CSVs per decision 2
-- [ ] Commit the pending edits to CLAUDE.md, `decisions/log.md`, and the modified skills
-- [ ] Make `.mcp.json` portable (it hardcodes `C:\Users\agonz\.local\bin\odoo-mcp.exe`, which
-      exists on exactly one machine)
-- [ ] Create the private repo in the Volition GitHub org, add remote, push
-- [ ] Invite Constance to the repo
-- [ ] Write the teammate setup SOP into `references/sops/`, including the `--native-tls` /
-      `truststore` workaround for our TLS inspection
+- [x] Add `/*.html` and `/jar.txt` to `.gitignore` (root-scoped, per decision 3) — done 2026-07-24
+- [x] Triage the untracked files: commit the real work, including the Holman CSVs per decision 2 —
+      done 2026-07-24 (commit `097f5e3`, secret-scanned clean first)
+- [x] Commit the pending edits to CLAUDE.md, `decisions/log.md`, and the modified skills — done
+      (same commit)
+- [x] Create the private repo in the Volition GitHub org, add remote, **push** — done 2026-07-24.
+      Live at github.com/Volition-Comp/volition-claude-ea (private). Branch `main`. Off-machine
+      backup achieved; the disk-failure risk is closed.
+- [x] Invite Constance to the repo — done 2026-07-29. She has her own GitHub login and repo access.
+      **Phase 0 complete.**
+- [x] Teammate setup SOP (Track B / app) — already exists and reviewed 2026-07-24:
+      `references/sops/connect-odoo-to-claude.md`. Non-technical, ready for Tony and Esme in Phase 5.
 
-Order matters. The `.gitignore` goes in **before** the first `git add`, or the scratch files land
-in history permanently.
+**Moved to Phase 2 (Constance's developer setup):**
+- Making `.mcp.json` portable. It hardcodes `C:\Users\agonz\.local\bin\odoo-mcp.exe`, and
+  `.local\bin` isn't on PATH, so the absolute path is load-bearing for Adan's live connection.
+  Changing it blind risks breaking his Odoo. Solve it on Constance's machine where we can test.
+- Writing the **Track A setup SOP** (install uv, VS Code, clone, own API key, the `--native-tls` /
+  `truststore` TLS fix). Write it live while walking Constance through it, so it captures the real
+  machine-specific gotchas instead of guessing.
 
 ### Phase 1: Team plan + seats (week 1, $100-$200/mo starts)
 

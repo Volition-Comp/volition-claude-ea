@@ -1,0 +1,224 @@
+<title>Balance Sheet Cleanup — CPA Briefing</title>
+<style>
+  :root {
+    --paper: #F5F7F5; --surface: #FFFFFF; --ink: #18211D; --ink-soft: #49544E;
+    --ink-faint: #7A847E; --line: #E2E7E3; --accent: #1F5C4A; --accent-soft: #E7F0EC;
+    --warn: #916312; --warn-soft: #F6ECD3; --crit: #97382B; --crit-soft: #F4E1DD;
+    --good: #2C7A57; --good-soft: #E1F0E8;
+    --shadow: 0 1px 2px rgba(24,33,29,.04), 0 6px 20px rgba(24,33,29,.05);
+    --font-display: Georgia, "Times New Roman", serif;
+    --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+    --maxw: 880px; --step: clamp(2rem, 4vw, 3rem);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #10140F; --surface: #191F1B; --ink: #E7ECE8; --ink-soft: #AAB4AE;
+      --ink-faint: #6F7973; --line: #29312C; --accent: #5FAE8F; --accent-soft: #1A2822;
+      --warn: #D6A24A; --warn-soft: #29220F; --crit: #DA8072; --crit-soft: #2C1814;
+      --good: #62BC91; --good-soft: #142219;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.28);
+    }
+  }
+  :root[data-theme="light"] {
+    --paper: #F5F7F5; --surface: #FFFFFF; --ink: #18211D; --ink-soft: #49544E;
+    --ink-faint: #7A847E; --line: #E2E7E3; --accent: #1F5C4A; --accent-soft: #E7F0EC;
+    --warn: #916312; --warn-soft: #F6ECD3; --crit: #97382B; --crit-soft: #F4E1DD;
+    --good: #2C7A57; --good-soft: #E1F0E8;
+    --shadow: 0 1px 2px rgba(24,33,29,.04), 0 6px 20px rgba(24,33,29,.05);
+  }
+  :root[data-theme="dark"] {
+    --paper: #10140F; --surface: #191F1B; --ink: #E7ECE8; --ink-soft: #AAB4AE;
+    --ink-faint: #6F7973; --line: #29312C; --accent: #5FAE8F; --accent-soft: #1A2822;
+    --warn: #D6A24A; --warn-soft: #29220F; --crit: #DA8072; --crit-soft: #2C1814;
+    --good: #62BC91; --good-soft: #142219;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.28);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: var(--step) clamp(1.1rem, 4vw, 2.4rem) 4rem; }
+  .num { font-variant-numeric: tabular-nums; font-family: var(--font-mono); }
+
+  .mast { border-bottom: 2px solid var(--ink); padding-bottom: 1.4rem; margin-bottom: 1.8rem; }
+  .eyebrow { font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 0 0 .7rem; }
+  h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.9rem, 4.4vw, 2.8rem); line-height: 1.08; letter-spacing: -.01em; text-wrap: balance; margin: 0 0 .7rem; }
+  .mast-meta { display: flex; flex-wrap: wrap; gap: .4rem 1.6rem; font-size: .86rem; color: var(--ink-soft); margin-top: 1rem; }
+  .mast-meta b { color: var(--ink); font-weight: 600; }
+
+  .callout { background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent); border-radius: 12px; padding: 1.15rem 1.35rem; margin: 1.8rem 0; }
+  .callout p { margin: 0; font-size: .95rem; color: var(--ink); }
+  .callout p + p { margin-top: .7rem; }
+  .callout b { color: var(--accent); }
+
+  .ask { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 10px; box-shadow: var(--shadow); padding: 1.15rem 1.35rem; margin: 1.6rem 0 2.4rem; }
+  .ask h2 { font-family: var(--font-display); font-size: 1.15rem; margin: 0 0 .3rem; }
+  .ask p.sub { margin: 0 0 .8rem; font-size: .88rem; color: var(--ink-soft); }
+  ol.decisions { margin: 0; padding-left: 0; list-style: none; counter-reset: d; }
+  ol.decisions li { counter-increment: d; position: relative; padding: .55rem 0 .55rem 2.4rem; border-top: 1px solid var(--line); font-size: .92rem; }
+  ol.decisions li:first-child { border-top: none; }
+  ol.decisions li::before { content: counter(d); position: absolute; left: 0; top: .6rem; width: 1.6rem; height: 1.6rem; border-radius: 6px; background: var(--accent); color: var(--surface); font-family: var(--font-mono); font-weight: 600; font-size: .82rem; display: grid; place-items: center; }
+  ol.decisions li b { color: var(--ink); }
+
+  .sec-head { font-family: var(--font-display); font-weight: 600; font-size: 1.02rem; letter-spacing: .02em; text-transform: uppercase; color: var(--ink-soft); margin: 2.6rem 0 1rem; padding-bottom: .5rem; border-bottom: 1px solid var(--line); }
+
+  .pill { display: inline-flex; align-items: center; gap: .4rem; font-size: .68rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; padding: .2rem .55rem; border-radius: 100px; }
+  .pill::before { content: ""; width: 6px; height: 6px; border-radius: 100px; background: currentColor; }
+  .pill.decide { background: var(--warn-soft); color: var(--warn); }
+  .pill.resolved { background: var(--good-soft); color: var(--good); }
+  .pill.routine { background: var(--accent-soft); color: var(--accent); }
+
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 13px; box-shadow: var(--shadow); margin-bottom: 1.05rem; overflow: hidden; display: grid; grid-template-columns: 5px 1fr; }
+  .card .stripe { background: var(--accent); }
+  .card.s-decide .stripe { background: var(--warn); }
+  .card.s-resolved .stripe { background: var(--good); }
+  .card.s-routine .stripe { background: var(--accent); }
+  .card .body { padding: 1.15rem 1.3rem 1.25rem; min-width: 0; }
+  .card-top { display: flex; flex-wrap: wrap; align-items: baseline; gap: .55rem .8rem; margin-bottom: .55rem; }
+  .card-top h3 { font-family: var(--font-display); font-weight: 600; font-size: 1.16rem; letter-spacing: -.005em; margin: 0; flex: 1 1 auto; min-width: 12ch; }
+  .amount { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-weight: 600; font-size: 1rem; color: var(--ink); white-space: nowrap; }
+  .meta-row { margin-bottom: .7rem; }
+  .block { margin-top: .7rem; }
+  .block .lbl { font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; display: block; margin-bottom: .15rem; }
+  .block p { margin: 0; font-size: .93rem; color: var(--ink-soft); }
+  .block p b { color: var(--ink); font-weight: 600; }
+  .block.decision { background: var(--warn-soft); border-radius: 8px; padding: .6rem .8rem; }
+  .block.decision .lbl { color: var(--warn); }
+  .block.decision p { color: var(--ink); }
+  ul.opts { margin: .25rem 0 0; padding-left: 1.1rem; }
+  ul.opts li { font-size: .92rem; color: var(--ink-soft); margin: .25rem 0; }
+  ul.opts li b { color: var(--ink); }
+
+  footer { margin-top: 2.6rem; padding-top: 1.2rem; border-top: 1px solid var(--line); font-size: .8rem; color: var(--ink-faint); line-height: 1.6; }
+  footer b { color: var(--ink-soft); }
+</style>
+
+<div class="wrap">
+
+  <header class="mast">
+    <p class="eyebrow">Volition Components LLC &middot; Advisory Briefing</p>
+    <h1>Balance Sheet Cleanup: Findings &amp; Proposed Corrections</h1>
+    <div class="mast-meta">
+      <span>Prepared for <b>Balanced Ledgers</b> (CPA)</span>
+      <span>From <b>Adan Gonzales</b>, Volition Components</span>
+      <span>Books: <b>Odoo</b> (converted from QuickBooks, Dec 2023)</span>
+    </div>
+  </header>
+
+  <div class="callout">
+    <p><b>Bottom line: the business is financially sound.</b> Cash, receivables, payables, inventory, fixed assets, loans, and owner equity all reconcile to the prior QuickBooks records. Nothing here suggests missing funds.</p>
+    <p><b>Nearly every issue traces to one root cause:</b> the December 2023 conversion from QuickBooks to Odoo was handled by a former contract bookkeeper who used a non-standard method. He recorded prior-period customer receipts directly into <b>equity (retained earnings)</b> rather than through income or accounts receivable. We have traced each item to its source journal entry and propose corrections below.</p>
+    <p>This memo is written in plain accounting terms. No Odoo knowledge is required. We have detailed line-item working papers available if you want to see any entry in full.</p>
+  </div>
+
+  <div class="ask">
+    <h2>What we need from you</h2>
+    <p class="sub">These are the decisions that require CPA judgment because they touch a prior year or a filed return. Our bookkeeper will make the entries once you confirm the treatment.</p>
+    <ol class="decisions">
+      <li><b>Three 2023 customer deposits on jobs finished in 2024</b> — recognize as customer deposits deferred into 2024, or leave as prior-period equity? (Affects 2023 vs. 2024 income.)</li>
+      <li><b>One unidentified $10,891.54 deposit</b> — once we trace the check, is it 2023 income (equity) or 2024 income? (If 2024, current income is understated by that amount.)</li>
+      <li><b>2023 migration keying errors</b> (operating bank and clearing accounts) — correct as prior-period adjustments, or current-dated reclassifications?</li>
+      <li><b>2023 payroll-tax balances</b> that carried over from QuickBooks and were never reconciled — how should these be cleared against the filed 941s and state returns you hold?</li>
+      <li><b>Consolidating two retained-earnings accounts into one</b> — confirm approach and opening balance.</li>
+    </ol>
+  </div>
+
+  <div class="sec-head">Root cause, in one paragraph</div>
+  <p style="font-size:.95rem;color:var(--ink-soft);margin-top:0;">When the books moved from QuickBooks to Odoo at the end of 2023, several open items (customer deposits on unfinished jobs, checks received right at the cutover, and opening balances) had to be carried across. The former bookkeeper's approach was to book these prior-period receipts straight into <b style="color:var(--ink)">retained earnings</b> as, in his words, &ldquo;income we earned&hellip; to increase our investment.&rdquo; That is why a manually-migrated retained-earnings account became a catch-all, and why a few clearing accounts carry migration &ldquo;plug&rdquo; balances. The underlying transactions are real; the classification is what needs correcting.</p>
+
+  <div class="sec-head">Needs your judgment</div>
+
+  <article class="card s-decide">
+    <div class="stripe"></div>
+    <div class="body">
+      <div class="card-top"><h3>Retained earnings used as a catch-all</h3><span class="amount">$36,550.80</span></div>
+      <div class="meta-row"><span class="pill decide">Needs your decision</span></div>
+      <div class="block"><span class="lbl">What it is</span><p>A retained-earnings account carried over from QuickBooks was used to absorb items that don't belong in equity: three 2023 customer deposits, an unidentified 2024 deposit, a 2024 partner distribution, and two inventory adjustments.</p></div>
+      <div class="block"><span class="lbl">Proposed corrections</span>
+        <ul class="opts">
+          <li><b>Partner distribution ($16,524.56):</b> reverse the manual entry so it sits in the partners' distribution accounts, where it belongs. Straightforward.</li>
+          <li><b>Inventory adjustments ($32,800.59 and $1,571.80):</b> reclassify to inventory / cost of goods sold. Straightforward.</li>
+          <li><b>Three 2023 job deposits ($16,130.42 each):</b> legitimate deposits on vans finished in 2024. Treatment is your call (see decision).</li>
+        </ul>
+      </div>
+      <div class="block decision"><span class="lbl">Your decision</span><p>For the three 2023 job deposits: customer-deposit liability recognized in 2024, or prior-period equity? This shifts roughly <b>$48,391</b> of revenue timing between 2023 and 2024.</p></div>
+    </div>
+  </article>
+
+  <article class="card s-decide">
+    <div class="stripe"></div>
+    <div class="body">
+      <div class="card-top"><h3>Unidentified deposit booked to equity</h3><span class="amount">$10,891.54</span></div>
+      <div class="meta-row"><span class="pill decide">Needs your decision</span></div>
+      <div class="block"><span class="lbl">What it is</span><p>A check deposited on 1/3/2024 whose offset was booked to retained earnings, with <b>no customer and no invoice attached</b>. Every other customer deposit is properly applied to a receivable; this one is the exception.</p></div>
+      <div class="block"><span class="lbl">Proposed correction</span><p>We will pull the bank record / check image to identify the payer and the underlying sale, then reclassify accordingly.</p></div>
+      <div class="block decision"><span class="lbl">Your decision</span><p>Once identified: if it relates to a <b>2023</b> sale, equity is defensible; if it relates to a <b>2024</b> sale, it is misclassified income and current-year revenue is understated by $10,891.54.</p></div>
+    </div>
+  </article>
+
+  <article class="card s-decide">
+    <div class="stripe"></div>
+    <div class="body">
+      <div class="card-top"><h3>Migration keying errors: operating bank &amp; clearing</h3><span class="amount">$20,531.66 + clearing</span></div>
+      <div class="meta-row"><span class="pill decide">Needs your decision</span></div>
+      <div class="block"><span class="lbl">What it is</span><p>The December-2023 conversion entry that distributed the total bank balance <b>overstated the operating account by exactly $20,531.66</b> and plugged the difference into a clearing account. That clearing account (about <b>$52,793</b>) is entirely migration plugs plus one 2023 customer check never applied.</p></div>
+      <div class="block"><span class="lbl">Proposed correction</span><p>One reclassification of $20,531.66 corrects the operating bank <i>and</i> removes that portion of the clearing balance. The remaining clearing items get matched or written to opening equity.</p></div>
+      <div class="block decision"><span class="lbl">Your decision</span><p>These touch fiscal 2023. Correct as prior-period adjustments, or as current-dated reclassifications? Confirm the offset account for any residual (opening balance equity vs. retained earnings).</p></div>
+    </div>
+  </article>
+
+  <article class="card s-decide">
+    <div class="stripe"></div>
+    <div class="body">
+      <div class="card-top"><h3>Payroll liabilities: carryover &amp; reconciliation</h3><span class="amount">multiple accounts</span></div>
+      <div class="meta-row"><span class="pill decide">Needs your decision</span></div>
+      <div class="block"><span class="lbl">What it is</span><p>The 2023 QuickBooks payroll-tax balances (CO withholding $3,920.00, CO unemployment $884.17, federal 941/944 $1,895.46) carried into the new books and were never reconciled or cleared. Separately, ongoing payroll payments have been miscoded, e.g., <b>child-support garnishments were coded to the state paid-family-leave account</b>.</p></div>
+      <div class="block"><span class="lbl">Proposed correction</span><p>Reconcile each payroll liability to the filed returns; reclassify the garnishment miscodes (a clean batch that clears two accounts); clear the 2023 carryover balances.</p></div>
+      <div class="block decision"><span class="lbl">Your decision</span><p>You prepare the payroll and hold the 941s and state filings. Please confirm the correct balances and how to clear the 2023 carryover (prior-year vs. current adjustment).</p></div>
+    </div>
+  </article>
+
+  <article class="card s-decide">
+    <div class="stripe"></div>
+    <div class="body">
+      <div class="card-top"><h3>Two retained-earnings accounts</h3><span class="amount">consolidation</span></div>
+      <div class="meta-row"><span class="pill decide">Needs your decision</span></div>
+      <div class="block"><span class="lbl">What it is</span><p>The accounting system computes retained earnings automatically. The manually-migrated QuickBooks retained-earnings account duplicates that, so the equity section shows retained earnings in two places.</p></div>
+      <div class="block"><span class="lbl">Proposed correction</span><p>After the items above are corrected, consolidate the remaining migrated balance into the system's single retained-earnings account so there is one going forward.</p></div>
+      <div class="block decision"><span class="lbl">Your decision</span><p>Confirm the approach and the correct opening retained-earnings figure to carry.</p></div>
+    </div>
+  </article>
+
+  <div class="sec-head">Already resolved</div>
+
+  <article class="card s-resolved">
+    <div class="stripe"></div>
+    <div class="body">
+      <div class="card-top"><h3>Van-disposal loss now on the 2024 P&amp;L</h3><span class="amount">$12,255.90</span></div>
+      <div class="meta-row"><span class="pill resolved">Done</span></div>
+      <div class="block"><span class="lbl">What happened</span><p>A $12,255.90 loss on a van sale sat in a memo (off-balance-sheet) account and never reached the income statement. Per your confirmation that the loss belongs in <b>2024</b>, the account was corrected to an expense account, so the loss now appears on the 2024 income statement. <b>Please confirm it ties to the 2024 return.</b></p></div>
+    </div>
+  </article>
+
+  <div class="sec-head">Handled internally (for your awareness)</div>
+
+  <article class="card s-routine">
+    <div class="stripe"></div>
+    <div class="body">
+      <div class="card-top"><h3>Routine bookkeeping cleanup</h3><span class="amount">low materiality</span></div>
+      <div class="meta-row"><span class="pill routine">Bookkeeper handles</span></div>
+      <div class="block"><span class="lbl">Items</span>
+        <ul class="opts">
+          <li><b>Sales tax across five accounts</b> nets to about &minus;$76 (essentially flat). We will consolidate to one collected account; flagging since it touches sales-tax filings.</li>
+          <li><b>Accounts payable / receivable</b> each have a handful of small unmatched items (mostly Amazon bank-feed charges); routine matching.</li>
+          <li><b>Goods-received-not-invoiced</b> and a few vendor timing differences self-correct as bills post; routine.</li>
+        </ul>
+      </div>
+      <div class="block"><span class="lbl">No action needed from you</span><p>Listed only so nothing looks hidden. Our bookkeeper will clear these.</p></div>
+    </div>
+  </article>
+
+  <footer>
+    <p>Prepared from Volition's live general ledger. Amounts are as recorded and reconcile to the 2023 QuickBooks trial balance and balance sheet. Detailed line-item working papers (source entries for every item above) are available on request. Two different contract bookkeepers are involved: the <b>former</b> bookkeeper made the entries described here (engagement ended Jan 2025); the <b>current</b> bookkeeper will perform the corrections.</p>
+  </footer>
+
+</div>
