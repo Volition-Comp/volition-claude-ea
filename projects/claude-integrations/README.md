@@ -93,38 +93,10 @@ remote connectors; Odoo is the gap.
 - [ ] Phase 2: repoint claude.ai connector to our own Odoo; disconnect hosted
 - [ ] Phase 2: roll out to the team (each connects once); decide which skills to upload to claude.ai
 
-## Meyer Distributing Connection (started 2026-07-23)
+## Meyer Distributing Connection
 
-**Goal:** pull Meyer product data programmatically so the assistant can look up our dealer
-cost, MAP/retail, live inventory, and vehicle fit directly, instead of Adan screenshotting the
-dealer portal (`online.meyerdistributing.com`). This came up while quoting partitions (Weather
-Guard + Holman parts had to be hand-entered as Misc lines on S01439). Feeds the estimate skills
-and could auto-create Meyer parts in Odoo.
+**Moved 2026-08-03 to its own project: `projects/meyer-integration/README.md`.**
 
-**Why not scrape the portal:** it's login-gated and JS-rendered (WebFetch only sees the empty
-template), and screen-scraping the authenticated site is brittle and likely against Meyer's ToS.
-Go through the official dealer API / data feed.
-
-**What Meyer offers (per research):** a dealer data API carrying full catalog, dealer-specific
-pricing, live inventory, UPC/MPN, images, and vehicle applications. Access is via API keys
-and/or FTP feed credentials, requested through the account rep.
-
-**Approach:** wrap Meyer's API in an MCP connector, same pattern as `odoo`/`odoo-prod`, added to
-`.mcp.json`. Interim fallback if the API is slow to provision: a scheduled price/inventory
-flat-file over FTP, loaded into a queryable table.
-
-**Contacts:** account manager Glenn Branham, Glenn.Branham@meyerdistributing.com,
-800.639.3787 ext. 6635.
-
-### Setup checklist
-- [x] Draft + queue the access-request email to Glenn (Gmail draft, 2026-07-23)
-- [ ] Adan sends the request; confirm what Meyer exposes (REST API keys vs FTP feed; cost)
-- [ ] Get credentials + technical docs
-- [ ] Store secret in a local env var (e.g. `MEYER_API_KEY`), never committed (mirror the Odoo pattern)
-- [ ] Build the MCP connector; add to `.mcp.json`
-- [ ] Read test (part lookup by SKU returns our cost + inventory)
-- [ ] Decide whether to auto-create Meyer parts in Odoo from the feed
-
-### Network TLS note
-Same HTTPS-inspection caveat as the Odoo connector: any Python tooling will likely need the
-`--native-tls` / `truststore` approach (see the Odoo Network TLS note above).
+Short version: Meyer (Zach Wood, Director of Ecommerce Sales) confirmed an FTP pricing/inventory
+feed and said an API is possible. No images and no vehicle fitment, they don't own that data.
+Waiting on technical specs. Same local-stdio-MCP architecture as the connectors above.

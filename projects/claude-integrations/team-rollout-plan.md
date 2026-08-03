@@ -245,27 +245,45 @@ per-person and per-machine and does not travel.
 **This is a sit-down, not an emailed setup doc.** Adan's read is that terminal work is new for
 her. Plan on a real session plus follow-ups, and expect this to be the slowest phase per person.
 
-- [ ] Walk through: install `uv`, VS Code, clone the repo
-- [ ] She generates her **own** Odoo API key (see the two-key note in Open Decisions)
-- [ ] Verify a read together
-- [ ] Have her run one full skill end to end on her own before calling it done
+- [x] Install VS Code + Claude Code extension, clone the repo — done 2026-07-29
+- [x] She generates her **own** Odoo API key — done 2026-07-29
+- [x] Verify a read — done. **Connected to both prod and staging 2026-07-29.**
+- [ ] Have her run one full skill end to end on her own before calling it fully done
 
-Track A now has a learning curve attached to it that it didn't have when Tony was the test. Don't
-pretend otherwise and don't rush it. If after a couple of sessions it isn't landing, moving her to
-Track B is a legitimate outcome, not a failure. She'd still own the Phase 4 module install, just
-directly in Odoo.
+**Phase 2 essentially complete (2026-07-29).** Constance is on Claude Code, connected to prod and
+staging under her own key. Notable: her own Claude Code drove the install and got **past the McAfee
+block that killed the standard uv installer** (see the onboarding section in
+`references/odoo-known-issues.md`). The setup fought us hard, folder-permission clone failures, git
+not installed, the McAfee kill, VS Code PATH staleness, all documented.
+
+**Two follow-ups still open:**
+1. **Capture the proven install method.** We don't yet have the exact steps her Claude Code used to
+   get uv/the connector installed past McAfee. Ask her Claude Code to write up what it actually ran,
+   then fold it into the onboarding section / a real Track A SOP. This is the reusable gold.
+2. **Read-only vs writes on her admin key** (the still-open two-key decision). Her key is full admin.
+   Confirm whether writes are enabled and whether that's intended before she does write work.
+
+The deferred `.mcp.json` portability item was effectively solved on her machine during this setup;
+fold the actual fix into the captured method above.
 
 ### Phase 3 (Track B): Prove the app + Odoo experience (week 2-3, $0)
 
 Validation before purchase. This is the phase that de-risks the $257.
 
-- [ ] Sign up Pantalytics free tier, add the custom connector in claude.ai
-- [ ] Adan connects and validates with a read
-- [ ] **Verify whether the remote connector has a guarded write flow.** See the safety note below.
-      This gates everything else in Track B.
-- [ ] **Esme connects and runs a real task.** She's the actual test. If a non-technical teammate
-      can't get value here, nothing downstream matters and we stop.
+- [x] Sign up Pantalytics free tier, add the custom connector in claude.ai — done 2026-08-03
+- [x] Adan connects and validates with a read — done 2026-08-03
+- [x] **Verify the remote connector has a guarded write flow — CONFIRMED 2026-08-03.** The Claude
+      app prompted Esme for permission before the write landed. The safety gate exists.
+- [x] **Esme connects and runs a real task — done 2026-08-03.** Under her own login, she read and
+      then wrote (created quote S01460, then cancelled it). Non-technical person, full read+write
+      with an approve step. **Phase 3 validated. Go on the $257.**
 - [ ] Decide which skills to deploy org-wide, and scope the porting work (below)
+
+**Note on Esme's key:** she's capped at short-lived (1-day) Odoo API keys. That's Odoo's built-in
+security (persistent keys are admin-only), not a misconfig, verified against prod: no config
+parameter caps it. Do NOT make her an admin to work around it. The owned module (Phase 4) uses
+OAuth token refresh, so the persistent-key problem disappears there. The 1-day key is fine for the
+test.
 
 **The skills do NOT transfer as-written.** Found 2026-07-16. Every skill is hardcoded to the local
 tuanle96 connector's API: `preview_write` (4), `validate_write` (6), `execute_approved_write` (6),

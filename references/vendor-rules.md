@@ -41,6 +41,25 @@ Build the line cost-in-qty style: put `0.22 x material_cost` in the **qty** fiel
 
 Validated against S01316, built into S01319.
 
+## Lead times (as of 2026-08-03)
+
+Quote these to customers. Confirm before committing on a large or dated order.
+
+| Vendor | Lead time |
+|---|---|
+| Prime Design | ~2 weeks |
+| Westcan | 4 weeks+ (currently the long pole on any shelving job) |
+| Packd | ~1 week |
+
+## Packd
+
+Being evaluated as an alternative to Westcan on shelving: **lower priced and ~1 week lead time**
+against Westcan's 4 weeks+. Not yet in Odoo and not yet used on a job.
+
+Quote Westcan, then flip to Packd at order time if the deal lands. That keeps the quote on a
+vendor we've priced and built before, and captures the cost and schedule upside once there's a
+PO. Don't quote Packd pricing until we've run one through.
+
 ## Legend Fleet
 
 ### Freight
@@ -51,6 +70,24 @@ Legend.
 Note the threshold is on **cost**, unlike Prime Design's $800 which is on the order. On a typical
 full interior kit (walls + ceiling + doors + flooring) for a full-size van, cost clears $3,500 and
 freight is free.
+
+## ProDriven (Weather Guard)
+
+ProDriven is Weather Guard's dealer portal and runs cheaper than Meyer on the same Weather Guard
+part numbers. On the 600-8413L HVAC/Mechanical package (July 2026): ProDriven $3,854.30 vs Meyer
+$4,621.79, a $767 spread. Check ProDriven first on any Weather Guard line.
+
+### Freight
+
+Free over **$4,000** on the order. Consolidate the whole Weather Guard content of a build onto one
+ProDriven order to clear it (shelving package plus racks usually does it on its own).
+
+### Van packages include the mounting kit
+
+The 600-series van packages ship with the vehicle-specific Van Shelf Mounting Kit already in the
+box (148" WB = 975104-3-01, low-roof 148 = 975102-3-01, 130 = 975101-3-01). **Don't order it as a
+separate line.** Put a note on the purchase line so nobody buys it twice. There is no unistrut in
+these packages, the mounting kit is the wall attachment.
 
 ## Prime Design
 

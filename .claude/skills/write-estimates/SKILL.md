@@ -85,20 +85,59 @@ explicit "go" before creating.
    Pattern per section: **section → Includes note → parts → labor → freight.**
    Good references: S01130, S01250 (Tofwerk).
 5. **Set the project name**: top-level `so_name` = the project name.
-6. **Preview to Adan** (human-readable table + total). Flag: no freight line unless a
+6. **Run the fitment check** (see below). Do this before the preview, every time the quote
+   has shelving or mounted accessories and a known vehicle.
+7. **Preview to Adan** (human-readable table + total). Flag: no freight line unless a
    cost is given; tax is $0 on API-created drafts (verify fiscal position, dealers are
-   usually resale-exempt).
-7. On "go": `validate_write` then `execute_approved_write` (confirm=true).
-8. **Read the record back** (`name`, `so_name`, `partner_id`, `amount_total`, `state`)
+   usually resale-exempt). Include the fitment check result.
+8. On "go": `validate_write` then `execute_approved_write` (confirm=true).
+9. **Read the record back** (`name`, `so_name`, `partner_id`, `amount_total`, `state`)
    and report the new SO number. Leave it in **draft**; never confirm or send.
-9. **Create the CRM opportunity and link it** (see Opportunities section). Every SO we
+10. **Create the CRM opportunity and link it** (see Opportunities section). Every SO we
    write gets a matching opportunity, linked both ways.
-10. **Post product links to the SO chatter — Misc parts only.** Only for products
+11. **Post product links to the SO chatter — Misc parts only.** Only for products
     **not already in Odoo** (the `[Misc] Special Order Part Non Inv` lines). Catalog
     products (real `product_id`) are already in the system, so skip their links. For each
     Misc part that has a source/vendor URL, post a chatter note with a short descriptor
     plus the link, one per line, e.g. `24 Inch 12V TV: <url>`. See Posting product links
     below for the method.
+
+## Fitment check (before the preview, every time)
+
+Never quote shelving or mounted accessories without checking them against the van's actual
+interior. Dimensions are in `references/van-interior-dimensions.md`, zoned A through L.
+
+Work it per side. The **street side (driver)** has the full run. The **curb side (passenger)**
+loses the side door opening. If the quote has a contoured partition, subtract the contoured
+partition deduction from the driver side (Transit 6 1/8", ProMaster 6 1/2", Sprinter 4 5/8").
+
+Check all six:
+
+1. **Length per side.** Add up every shelf unit, tank rack, drawer module, and cabinet on that
+   side. Street side has to fit inside `I` (available cargo space). Curb side has to fit inside
+   `I` minus `G` (door opening), which usually means `K - G` (pre-wheel well zone) forward of
+   the wheel well plus `D` (post-wheel well zone) behind it.
+2. **Nothing lands on a wheel well.** Walk the run front to back against `K`, then `E`, then
+   `D`. End panels, uprights, and rack feet have to fall inside `K` or inside `D`, never across
+   `E`. This is the most common miss.
+3. **Rear clearance.** The last item on the run has to sit inside `D` (post-wheel well zone),
+   not past it. `D` is what you have between the back of the wheel well and the rear door
+   opening, and it's where a tank rack behind a shelf hits the D-pillar. On a 148 Transit low
+   or medium roof `D` is only 6 1/16", so a rear-mounted tank rack does not fit there.
+4. **Height.** Stack height against `A` (usable roof height, measured at the wall, not the
+   peak). Anything sitting on top of a wheel well loses the wheel well's H on top of that.
+5. **Depth and aisle.** Shelf depth on both sides plus anything that protrudes has to leave a
+   working aisle inside `B` (van depth). Subtract the wheel well's D where relevant.
+6. **Chassis variants.** Dual rear wheel Sprinters (3500 / 4500) intrude 16" instead of 8 1/2".
+   Nissan NV wheel wells differ left to right. Both break a symmetrical layout.
+
+**Report the result in the preview**, even when it's clean. One line per side with the run
+consumed against the run available, e.g. "Street side: 96" + 60" = 156" in 156 7/8" available,
+clears. Curb side: 60" shelf lands in the 37 5/16" pre-wheel well zone, does not fit."
+
+**If something doesn't fit, say so before the quote goes out, not after.** Offer the fix
+(shorter unit, move to the other side, relocate ahead of the wheel well) and let Adan decide.
+Do not silently resize or drop a line he asked for.
 
 ## Posting product links (chatter)
 `chatter_post` escapes HTML (links show as literal text) and `message_post` via

@@ -46,6 +46,25 @@ tax-exempt order, set `tax_ids: [[6, 0, []]]` on new lines.
 
 Ops still needs to cancel or replace the underlying PO. The SO edit doesn't do that.
 
+## Quote/SO PDF hides individual priced line items from customers
+
+On our quotation and sale-order PDFs, **individual priced line items do not print in the customer
+copy** (they only appear in the full/internal view). What the customer actually reads is the
+**section headers and the note lines** (`line_section` and `line_note`). Practical consequences:
+
+- Vendor sourcing and internal placeholders left on *priced* lines (e.g. "from ProDriven", "do not
+  purchase kit X", "Update Specs") are **not** customer-visible. No need to strip them for the
+  customer's sake.
+- **Note quality is the customer-facing document.** For completeness/formatting review, the
+  "Includes:" notes and section names are what to scrutinize. A quote whose note is a stub reads as
+  near-blank to the customer even if the priced lines are complete.
+- Anything you *want* the customer to see (install requirements, scope) has to live in a
+  `line_section` or `line_note`, not in a priced line's description.
+
+Note: `line_note` text can drop content on create (observed the final line of a multi-line note
+silently truncated on first write, stored fully on a follow-up write). Read the note back after
+writing to confirm it stored whole.
+
 ## Chatter notes render as escaped HTML
 
 **`chatter_post` HTML-escapes the body and wraps everything in one `<p>`.** Any tags or entities
