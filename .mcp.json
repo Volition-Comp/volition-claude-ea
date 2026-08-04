@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "odoo": {
-      "command": "C:\\Users\\agonz\\.local\\bin\\odoo-mcp.exe",
+      "command": "${USERPROFILE}\\.local\\bin\\odoo-mcp.exe",
       "args": ["--transport", "stdio"],
       "env": {
         "ODOO_URL": "https://volition-staging-03-july-34408301.dev.odoo.com",
@@ -16,7 +16,7 @@
       }
     },
     "odoo-prod": {
-      "command": "C:\\Users\\agonz\\.local\\bin\\odoo-mcp.exe",
+      "command": "${USERPROFILE}\\.local\\bin\\odoo-mcp.exe",
       "args": ["--transport", "stdio"],
       "env": {
         "ODOO_URL": "https://www.volitioncomponents.com",

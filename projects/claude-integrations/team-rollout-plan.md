@@ -197,8 +197,8 @@ per-person and per-machine and does not travel.
 - [ ] Add `/*.html` and `/jar.txt` to `.gitignore` (root-scoped, per decision 3)
 - [ ] Triage the untracked files: commit the real work, including the Holman CSVs per decision 2
 - [ ] Commit the pending edits to CLAUDE.md, `decisions/log.md`, and the modified skills
-- [ ] Make `.mcp.json` portable (it hardcodes `C:\Users\agonz\.local\bin\odoo-mcp.exe`, which
-      exists on exactly one machine)
+- [x] Make `.mcp.json` portable (2026-07-29): both connectors now use `${USERPROFILE}\.local\bin\odoo-mcp.exe`,
+      which resolves per-user instead of hardcoding Adan's path.
 - [ ] Create the private repo in the Volition GitHub org, add remote, push
 - [ ] Invite Constance to the repo
 - [ ] Write the teammate setup SOP into `references/sops/`, including the `--native-tls` /
@@ -223,9 +223,13 @@ in history permanently.
 **This is a sit-down, not an emailed setup doc.** Adan's read is that terminal work is new for
 her. Plan on a real session plus follow-ups, and expect this to be the slowest phase per person.
 
-- [ ] Walk through: install `uv`, VS Code, clone the repo
-- [ ] She generates her **own** Odoo API key (see the two-key note in Open Decisions)
-- [ ] Verify a read together
+- [x] Walk through: install `uv`, VS Code, clone the repo (2026-07-29; VS Code and the clone
+      already existed, `uv` + the `odoo-mcp` tool installed via winget, `irm | iex` install script
+      avoided since McAfee killed it)
+- [x] She generates her **own** Odoo API key (2026-07-29) — single key, not the two-key split (see
+      decision log 2026-07-29)
+- [x] Verify a read together (2026-07-29): `search_records` on `sale.order` against `odoo-prod`
+      returned live quotes (S01448, S01435, S01439, S01447, S01446) under her own login
 - [ ] Have her run one full skill end to end on her own before calling it done
 
 Track A now has a learning curve attached to it that it didn't have when Tony was the test. Don't

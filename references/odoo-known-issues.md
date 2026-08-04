@@ -24,6 +24,12 @@ staging breaks with a TLS "certificate's CN name does not match" error, the host
 config. Get the new URL, update `ODOO_URL` and `ODOO_DB` in `.mcp.json`, generate a fresh API key
 (keys are per-database), and restart. Never set `ODOO_VERIFY_SSL=0`.
 
+**Staging is rebuilt monthly, fresh from production** (confirmed with Constance 2026-07-30, next
+rebuild due 2026-08-04). Any write made only to staging (never applied to prod) gets wiped on the
+next rebuild. Don't bother manually re-syncing a staging-only test change if a rebuild is close,
+it'll come from prod automatically. If a rebuild happens and staging still shows old/un-fixed data
+that should have come from prod, the rebuild source isn't what we think, worth flagging.
+
 ## Writes go through the guarded flow
 
 `preview_write` then `validate_write` then `execute_approved_write` with `confirm=true`.
