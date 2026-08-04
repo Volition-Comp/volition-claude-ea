@@ -41,6 +41,25 @@ Build the line cost-in-qty style: put `0.22 x material_cost` in the **qty** fiel
 
 Validated against S01316, built into S01319.
 
+## Lead times (as of 2026-08-03)
+
+Quote these to customers. Confirm before committing on a large or dated order.
+
+| Vendor | Lead time |
+|---|---|
+| Prime Design | ~2 weeks |
+| Westcan | 4 weeks+ (currently the long pole on any shelving job) |
+| Packd | ~1 week |
+
+## Packd
+
+Being evaluated as an alternative to Westcan on shelving: **lower priced and ~1 week lead time**
+against Westcan's 4 weeks+. Not yet in Odoo and not yet used on a job.
+
+Quote Westcan, then flip to Packd at order time if the deal lands. That keeps the quote on a
+vendor we've priced and built before, and captures the cost and schedule upside once there's a
+PO. Don't quote Packd pricing until we've run one through.
+
 ## Legend Fleet
 
 ### Freight
@@ -51,6 +70,24 @@ Legend.
 Note the threshold is on **cost**, unlike Prime Design's $800 which is on the order. On a typical
 full interior kit (walls + ceiling + doors + flooring) for a full-size van, cost clears $3,500 and
 freight is free.
+
+## ProDriven (Weather Guard)
+
+ProDriven is Weather Guard's dealer portal and runs cheaper than Meyer on the same Weather Guard
+part numbers. On the 600-8413L HVAC/Mechanical package (July 2026): ProDriven $3,854.30 vs Meyer
+$4,621.79, a $767 spread. Check ProDriven first on any Weather Guard line.
+
+### Freight
+
+Free over **$4,000** on the order. Consolidate the whole Weather Guard content of a build onto one
+ProDriven order to clear it (shelving package plus racks usually does it on its own).
+
+### Van packages include the mounting kit
+
+The 600-series van packages ship with the vehicle-specific Van Shelf Mounting Kit already in the
+box (148" WB = 975104-3-01, low-roof 148 = 975102-3-01, 130 = 975101-3-01). **Don't order it as a
+separate line.** Put a note on the purchase line so nobody buys it twice. There is no unistrut in
+these packages, the mounting kit is the wall attachment.
 
 ## Prime Design
 
@@ -76,6 +113,34 @@ Labor: **LABLRDD** Ladder Rack Installation, Double Drop Down (id 3950, $595).
 
 Catalog list prices already include the standard 1.67x markup on Prime Design dealer cost, so
 don't mark them up again.
+
+## Where the freight line goes
+
+Freight is charged as its own `[S&H] Shipping` line inside a **pricing section**, never as a
+standalone FREIGHT section. Which section it lands in is a judgement call, and the rule is:
+
+**Put the bulk of the freight on the largest, most relevant item in the shipment.**
+
+The reason is how it reads to the customer. Freight parked at the bottom of the quote falls into
+whatever section happens to be last, and a small section then carries an absurd-looking number.
+On S01447 the last section was two 8" running board kits. With $1,665 of freight sitting under it,
+the section read $3,357 for two steps. Any person reading that thinks it's ridiculous. Moved onto
+the floor (the largest line in the shipment), it disappears into a number that makes sense.
+
+Splitting across sections is fine, and is the right call when the parts genuinely come from
+different vendors. S01447 ships the floor, seats, and Shift N Step hardware from Fenton, but the
+Braun lift comes direct from Braun, so it carries its own freight line:
+
+| Section | Freight cost | Covers |
+|---|---|---|
+| FLOOR & SEATING | $1,250 | the Fenton shipment |
+| SHIFT N STEP LIFT | $500 | the Braun lift, direct from the manufacturer |
+
+When you split, the section that holds the biggest item takes the larger share. An even split
+(e.g. $750 / $750) is also fine when the two shipments are comparable.
+
+Keep "Freight to Volition Components" as the last bullet in the Includes note of any section that
+carries a freight line, and leave it out of sections that don't.
 
 ## Pricing patterns (quick reference)
 

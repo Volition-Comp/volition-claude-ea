@@ -52,6 +52,25 @@ tax-exempt order, set `tax_ids: [[6, 0, []]]` on new lines.
 
 Ops still needs to cancel or replace the underlying PO. The SO edit doesn't do that.
 
+## Quote/SO PDF hides individual priced line items from customers
+
+On our quotation and sale-order PDFs, **individual priced line items do not print in the customer
+copy** (they only appear in the full/internal view). What the customer actually reads is the
+**section headers and the note lines** (`line_section` and `line_note`). Practical consequences:
+
+- Vendor sourcing and internal placeholders left on *priced* lines (e.g. "from ProDriven", "do not
+  purchase kit X", "Update Specs") are **not** customer-visible. No need to strip them for the
+  customer's sake.
+- **Note quality is the customer-facing document.** For completeness/formatting review, the
+  "Includes:" notes and section names are what to scrutinize. A quote whose note is a stub reads as
+  near-blank to the customer even if the priced lines are complete.
+- Anything you *want* the customer to see (install requirements, scope) has to live in a
+  `line_section` or `line_note`, not in a priced line's description.
+
+Note: `line_note` text can drop content on create (observed the final line of a multi-line note
+silently truncated on first write, stored fully on a follow-up write). Read the note back after
+writing to confirm it stored whole.
+
 ## Chatter notes render as escaped HTML
 
 **`chatter_post` HTML-escapes the body and wraps everything in one `<p>`.** Any tags or entities
@@ -96,6 +115,165 @@ If a query returns 0 and you expected rows, **re-run it with fewer fields before
 On `res.users`, the groups field is **`group_ids`** in Odoo 19, not `groups_id`. Also,
 `read_record` on `res.users` returned "Record not found" for ids that `search_records` returns
 fine, so use `search_records` with an `id in [...]` domain for users.
+
+## CRM: quotes look "missing" on opportunities (two unrelated causes)
+
+**Found 2026-07-25**, chasing "I can't see quotes on opportunities on my phone." Two separate
+things, and they compound.
+
+### 1. The smart-button row disappears below 768px
+
+Odoo hides the entire `oe_button_box` (Meetings, Quotations, Orders, Similar Leads) when the
+viewport is narrower than **768 CSS pixels**. Hard cutoff in the framework, not a setting, and
+there is no overflow menu to dig into. The buttons are simply not rendered. From
+`web/static/src/core/ui/ui_service.js` (19.0):
+
+```js
+export const MEDIAS_BREAKPOINTS = [
+    { maxWidth: 575 },
+    { minWidth: 576, maxWidth: 767 },   // isSmall tops out here
+    { minWidth: 768, maxWidth: 991 },
+    ...
+];
+```
+
+`isSmall` is true at `SIZES.SM` or below, so 767px and under.
+
+iPhone landscape widths straddle that line exactly:
+
+| Model | Landscape width | Layout |
+|---|---|---|
+| SE (all gens), 7, 8 | 667 | mobile, no buttons |
+| 8 Plus | 736 | mobile, no buttons |
+| X, XS, 11 Pro, 12/13 mini | 812 | desktop, buttons |
+| 11, 12, 13, 14, 15, 16 | 844 to 896 | desktop, buttons |
+| any Plus / Pro Max | 926 to 956 | desktop, buttons |
+
+That's why two people on the same app looking at the same record see different screens. Safari page
+zoom above 100% and iOS Display Zoom set to "Larger Text" can also push a newer phone under the
+line, so check those before blaming the hardware.
+
+### 2. `quotation_count` reads 0 as soon as a quote is confirmed
+
+`quotation_count` counts only orders still in **draft or sent**. On confirmation the order shifts to
+`sale_order_count` and the Orders button. So on any **won** opportunity, Quotations shows 0 while
+the money sits under Orders. Working as designed, but it reads exactly like missing data, and it
+hits desktop users too.
+
+Also worth knowing: `quotation_count` and `sale_order_count` are **`store: false, searchable:
+false`**. A domain like `[["quotation_count", ">", 0]]` comes back `count: 0` with no error, which
+is another instance of the silent-zero trap above. Search `sale.order` on `opportunity_id` instead,
+which is stored and behaves.
+
+### Fix
+
+A **"Quotes & Orders" tab** on the `crm.lead` form listing `order_ids` (stored one2many to
+`sale.order` via `opportunity_id`) with every linked record regardless of state. It sits in the
+record body rather than the button row, so it renders at any width and sidesteps both problems at
+once. Read-only, hidden on leads via `invisible="type == 'lead'"`.
+
+Staging view **7579**, created 2026-07-25, confirmed working. **Not yet on prod** as of that date,
+pending Constance's testing. Deploy = recreate the same inherited view against the prod
+`crm.lead.form` id, re-resolved in prod. Reversible by deactivating the one view; touches no data.
+
+## Expected Revenue auto-populates from the quote
+
+**Built on staging 2026-07-27, deployed to prod 2026-07-28.** Replaces hand-typing Expected Revenue
+on every opportunity, which drifted constantly (prod opp 1165 Schaefer read $46,078.04 against a
+$46,694.04 quote, and several opps with live quotes sat at $0).
+
+Odoo gives you `sale_amount_total` ("Sum of Orders") for free, but it is **not stored** and counts
+**confirmed orders only**, so it can't drive `expected_revenue`. You need an automation rule.
+
+**The pieces (prod / staging):**
+
+| Piece | Prod | Staging | What it does |
+|---|---|---|---|
+| `base.automation` | 27 | 27 | On Sales Order, trigger `on_create_or_write`, trigger fields `state` / `amount_untaxed` / `opportunity_id`, filter `[("opportunity_id","!=",False)]` |
+| `ir.actions.server` | 1892 | 1891 | Python code action that writes `expected_revenue` on the linked lead |
+| `ir.ui.view` | 7582 | 7580 | Opportunity form: Expected Revenue read-only once a quote exists |
+| `ir.ui.view` | 7583 | 7581 | Opportunity list: Expected Revenue read-only outright |
+
+**The rule (chosen by Adan over "sum everything" and "latest only"):**
+
+- Any confirmed order on the opp: sum the untaxed totals of the confirmed ones.
+- Nothing confirmed yet: use the newest live quote's untaxed total.
+- Cancelled quotes ignored. If *every* quote is cancelled, leave the number alone rather than
+  zeroing it.
+- **Zero-value quotes ignored too**, same reasoning. Without this, opening a blank quote shell on an
+  opportunity wipes a real estimate to $0. Caught during the prod backfill: opp 1098 CU Boulder
+  Primary Care Van had a real $85,000 estimate and an empty draft quote, and would have been zeroed.
+- Untaxed, not total. That matches how Adan was filling it in by hand.
+
+Summing everything breaks on revisions (prod opp 1164 has two live quotes that are the same job,
+$3,525.84 then $3,776.50). Latest-only breaks on genuinely multi-order deals (prod opp 300,
+Bachelor Gulch, has 8 separate orders). The confirmed/else-latest split handles both.
+
+It populates on **draft** quotes. Confirmation is not required, it only switches which branch feeds
+the number.
+
+### Gotcha: base_automation does not fire on a no-op write
+
+Writing a field its **existing** value does not trigger the rule. Odoo drops unchanged values before
+the automation sees them. So you **cannot** use "write the m2o back to itself" as a manual way to
+kick an automation over MCP, and a test done that way reads as a broken rule when the rule is fine.
+Test with a real change instead.
+
+### Gotcha: fields used in a view modifier must be in *your* view
+
+The form lock first went in as `readonly="quotation_count &gt; 0 or sale_order_count &gt; 0"`,
+relying on those two fields already being in the form via sale_crm's smart buttons (view 2467).
+The xpath matched, Odoo accepted the view, the data was correct, and the field **stayed editable**.
+
+Fields declared inside `<button>` nodes in the button box do not reliably reach the form's
+evaluation context. Fix: inject them into your own inherited view next to the field you're
+gating, as `<field name="..." invisible="1"/>`. Duplicate field nodes in a *form* are fine, the base
+`crm.lead.form` already declares `partner_id` and `email_from` twice.
+
+General rule: a view that saves cleanly is not a view that works. Odoo validates the xpath at write
+time, and nothing else.
+
+### Gotcha: you can't simulate quote confirmation over MCP
+
+`state` on `sale.order` is readonly in `fields_get`, so `validate_write` refuses it and
+`action_confirm` is a blocked side-effect method. The draft-to-confirmed transition has to be tested
+by hand in the UI.
+
+### Known gap
+
+Move a quote from opportunity A to opportunity B and **B updates, A keeps its stale number**. The
+action only sees the new opportunity. Rare enough that it was left alone deliberately; a nightly
+sweep over open opps would close it if it ever bites.
+
+### "Not won and not lost" is not the same as "open"
+
+Filtering opportunities on `won_status = 'pending'` to find the live pipeline pulls in **425 records
+parked in a stage literally named Archive**, carrying $3.29M of stale expected revenue. Those are old
+deals nobody ever formally marked Won or Lost. Any bulk operation scoped by won/lost status will hit
+them.
+
+The real selling pipeline is `stage_id in (1 New, 2 Qualified, 3 Proposition, 10 Approved – Final
+Prep)`. Stages 11 Off-Site, 8 In Production, 9 Prod. Complete, 7 Invoiced and 5 Delivered & Unpaid
+sit *after* Won in sequence but still read `is_won = false`, so they also survive a pending filter
+while representing work already sold. Scope by stage, not by won status.
+
+### Backfill done 2026-07-28
+
+14 opportunities in the selling stages, net +$88,407. Deliberately skipped:
+
+- **Opp 1098 CU Boulder Primary Care Van**, protected by the zero-quote guard above.
+- **Opp 1157 State Bid Quotes**, a bucket opp holding 25 unrelated live draft quotes (~$163k total).
+  Neither "newest quote" ($51,841.05) nor the sum is meaningful. Left at $0. **The automation will
+  set it to the newest quote as soon as anyone edits one of those 25.** The real fix is splitting it
+  into separate opportunities.
+
+The 34 opportunities in post-sale stages were left alone. Only 10 differed and the net was -$171,
+almost all cent-level rounding.
+
+### Reversing it
+
+Deactivate the automation rule and the two views. Touches no data. The backfilled values stay as
+written.
 
 ## Who can create products
 
@@ -281,3 +459,59 @@ Fixes:
 
 Any new Python or CLI tooling on this network will likely hit the same wall. Expect Constance's
 machine to need the same treatment.
+
+## Onboarding a teammate to Claude Code on a locked-down office machine
+
+Findings from setting up Constance's machine, 2026-07-29. These machines fight the local connector
+install at nearly every step. Read this before onboarding the next person on Track A.
+
+**The punchline first: on a locked-down office machine, prefer the REMOTE connector over the local
+one.** Once the remote OAuth connector (MCP Studio / the app connector) is live, Claude Code can
+point at *that* instead of a local stdio connector, which skips uv, the TLS workaround, and the
+McAfee fight entirely. The whole local-install gauntlet below exists only because we're standing up
+the local connector before the remote one. If the remote connector is already up, use it and skip
+most of this.
+
+Walls hit, in order, with what worked:
+
+1. **McAfee kills the standard uv installer.** `irm https://astral.sh/uv/install.ps1 | iex` gets the
+   PowerShell process terminated (VS Code shows "terminal process terminated with exit code: 1").
+   Endpoint protection blocks the download-a-script-and-execute-it pattern. It fails *silently
+   enough* to look like the install just "closed." Verify with
+   `Test-Path "$env:USERPROFILE\.local\bin\uv.exe"` (came back `False`). Workaround: install uv
+   **without** the piped-script pattern, download the uv Windows binary from the astral-sh/uv GitHub
+   releases page in the **browser** (browser downloads are allowed; it's CLI script-execution that's
+   blocked) and extract it, or `pip install uv` if a real Python is present.
+
+2. **Cloning into Documents / Desktop / OneDrive / the C:\ root gives "destination folder access
+   denied."** Controlled Folder Access / locked permissions. Clone into a fresh plain folder in the
+   user profile instead: `cd ~; mkdir dev; cd dev; git clone <url>`. Lands clean in
+   `C:\Users\<user>\dev`.
+
+3. **git isn't preinstalled, and VS Code hides "Git: Clone" until it is.** If the command is missing
+   from the palette, git's not there. Install Git for Windows from git-scm.com (browser download,
+   not winget), then **fully restart VS Code**.
+
+4. **VS Code's terminal keeps the old PATH after an installer runs.** A new terminal *tab* isn't
+   enough; the integrated terminal inherits VS Code's environment from when VS Code launched. Either
+   fully restart VS Code, or add to the session PATH by hand
+   (`$env:Path = "$env:USERPROFILE\.local\bin;" + $env:Path`).
+
+5. **Claude Code the VS Code extension vs. Claude the web app are different things.** "I'm chatting
+   with Claude" might be the browser app. For Track A they need the **VS Code extension** (Extensions
+   panel, search "Claude Code", Anthropic publisher). The repo context/skills only load in the
+   extension opened on the cloned folder.
+
+6. **Each person needs their own Odoo API key, and only they can make it.** Generated in Odoo web UI
+   (My Profile > Account Security > New API Key). The agent can't create it. Set it as the env var
+   `.mcp.json` expects (`ODOO_PROD_API_KEY`, and `ODOO_API_KEY` for staging).
+
+7. **The committed `.mcp.json` hardcodes Adan's connector path**
+   (`C:\Users\agonz\.local\bin\odoo-mcp.exe`). Each machine needs its own path, plus the TLS
+   truststore chain from the HTTPS-inspection section above. This is the still-unsolved portability
+   item, another reason to prefer the remote connector.
+
+**Least-privilege note for admins:** the committed config has writes enabled. For an Odoo admin
+(Constance), the API key carries full admin permissions (Odoo keys inherit the user's rights; you
+can't scope a key below its user without a second, limited Odoo user). Set up **read-only first**
+(drop the writes flag) and enable writes deliberately once the key approach is settled.

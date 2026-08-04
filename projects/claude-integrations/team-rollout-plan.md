@@ -116,9 +116,23 @@ their own login" rule in this doc, which is the safety net the whole plan leans 
 premium over the cheap options buys per-user identity. It is not buying the React app builder or
 the ECharts dashboards, which we will never touch.
 
-**The $257 is entirely a Track B cost.** Track A already works, free, on the local `odoo-mcp`
-connector running since June. If this were just Adan and Constance, we'd spend nothing on
-connectors. Cleaner framing: $257 is what it costs to get Tony and Esme into Odoo.
+**The $257 is mostly a Track B cost, but not only.** Track A already works, free, on the local
+`odoo-mcp` connector running since June, so the primary reason to buy the module is getting Tony
+and Esme into Odoo. But there's a real bonus for Adan and Constance too: the remote connector is
+cloud-hosted, so it also unlocks **Odoo from the phone app with the laptop closed**. The local
+connector can't do that (it's a program on the laptop, unreachable from the cloud app, even when
+the laptop is on). So once the module is live, Adan can do live Odoo lookups, record updates, and
+(once the skills are ported) estimates from the Claude app on his phone, no computer running.
+
+**What mobile actually delivers, ranked by how soon/smoothly:**
+- **Real-time reads** (open quotes, order status, customer lookup): works the moment Phase 4 is
+  done. Cleanest of the three; the connector queries Odoo live.
+- **Record updates:** work once writes are enabled and Odoo permissions allow. Gated on verifying
+  the remote connector has the guarded approve-step (see Phase 3 safety note).
+- **Writing estimates:** yes, but the heaviest, and it needs the write-estimates skill ported to
+  the remote connector first (Phase 3/5 work). Realistically the phone is the "kick it off and
+  review" surface for a 15+ line quote, not the build-from-scratch surface. The computer stays
+  better for heavy quote construction.
 
 **Naming confusion, for the record.** MCP Studio is listed as "AI React App, Module & EChart
 Builder," and the description leads with building AI chat interfaces inside Odoo. That reads like
@@ -194,18 +208,28 @@ since June.
 **Standing habit going forward:** operating knowledge goes in `references/`, not memory. Memory is
 per-person and per-machine and does not travel.
 
-- [ ] Add `/*.html` and `/jar.txt` to `.gitignore` (root-scoped, per decision 3)
-- [ ] Triage the untracked files: commit the real work, including the Holman CSVs per decision 2
-- [ ] Commit the pending edits to CLAUDE.md, `decisions/log.md`, and the modified skills
+- [x] Add `/*.html` and `/jar.txt` to `.gitignore` (root-scoped, per decision 3) — done 2026-07-24
+- [x] Triage the untracked files: commit the real work, including the Holman CSVs per decision 2 —
+      done 2026-07-24 (commit `097f5e3`, secret-scanned clean first)
+- [x] Commit the pending edits to CLAUDE.md, `decisions/log.md`, and the modified skills — done
+      (same commit)
 - [x] Make `.mcp.json` portable (2026-07-29): both connectors now use `${USERPROFILE}\.local\bin\odoo-mcp.exe`,
       which resolves per-user instead of hardcoding Adan's path.
-- [ ] Create the private repo in the Volition GitHub org, add remote, push
-- [ ] Invite Constance to the repo
-- [ ] Write the teammate setup SOP into `references/sops/`, including the `--native-tls` /
-      `truststore` workaround for our TLS inspection
+- [x] Create the private repo in the Volition GitHub org, add remote, **push** — done 2026-07-24.
+      Live at github.com/Volition-Comp/volition-claude-ea (private). Branch `main`. Off-machine
+      backup achieved; the disk-failure risk is closed.
+- [x] Invite Constance to the repo — done 2026-07-29. She has her own GitHub login and repo access.
+      **Phase 0 complete.**
+- [x] Teammate setup SOP (Track B / app) — already exists and reviewed 2026-07-24:
+      `references/sops/connect-odoo-to-claude.md`. Non-technical, ready for Tony and Esme in Phase 5.
 
-Order matters. The `.gitignore` goes in **before** the first `git add`, or the scratch files land
-in history permanently.
+**Moved to Phase 2 (Constance's developer setup):**
+- Making `.mcp.json` portable. It hardcodes `C:\Users\agonz\.local\bin\odoo-mcp.exe`, and
+  `.local\bin` isn't on PATH, so the absolute path is load-bearing for Adan's live connection.
+  Changing it blind risks breaking his Odoo. Solve it on Constance's machine where we can test.
+- Writing the **Track A setup SOP** (install uv, VS Code, clone, own API key, the `--native-tls` /
+  `truststore` TLS fix). Write it live while walking Constance through it, so it captures the real
+  machine-specific gotchas instead of guessing.
 
 ### Phase 1: Team plan + seats (week 1, $100-$200/mo starts)
 
@@ -229,25 +253,44 @@ her. Plan on a real session plus follow-ups, and expect this to be the slowest p
 - [x] She generates her **own** Odoo API key (2026-07-29) — single key, not the two-key split (see
       decision log 2026-07-29)
 - [x] Verify a read together (2026-07-29): `search_records` on `sale.order` against `odoo-prod`
-      returned live quotes (S01448, S01435, S01439, S01447, S01446) under her own login
-- [ ] Have her run one full skill end to end on her own before calling it done
+      returned live quotes (S01448, S01435, S01439, S01447, S01446) under her own login.
+      **Connected to both prod and staging 2026-07-29.**
+- [ ] Have her run one full skill end to end on her own before calling it fully done
 
-Track A now has a learning curve attached to it that it didn't have when Tony was the test. Don't
-pretend otherwise and don't rush it. If after a couple of sessions it isn't landing, moving her to
-Track B is a legitimate outcome, not a failure. She'd still own the Phase 4 module install, just
-directly in Odoo.
+**Phase 2 essentially complete (2026-07-29).** Constance is on Claude Code, connected to prod and
+staging under her own key. Notable: her own Claude Code drove the install and got **past the McAfee
+block that killed the standard uv installer** (see the onboarding section in
+`references/odoo-known-issues.md`). The setup fought us hard, folder-permission clone failures, git
+not installed, the McAfee kill, VS Code PATH staleness, all documented.
+
+**Two follow-ups still open:**
+1. **Capture the proven install method.** We don't yet have the exact steps her Claude Code used to
+   get uv/the connector installed past McAfee. Ask her Claude Code to write up what it actually ran,
+   then fold it into the onboarding section / a real Track A SOP. This is the reusable gold.
+2. **Read-only vs writes on her admin key** (the still-open two-key decision). Her key is full admin.
+   Confirm whether writes are enabled and whether that's intended before she does write work.
+
+The deferred `.mcp.json` portability item was effectively solved on her machine during this setup;
+fold the actual fix into the captured method above.
 
 ### Phase 3 (Track B): Prove the app + Odoo experience (week 2-3, $0)
 
 Validation before purchase. This is the phase that de-risks the $257.
 
-- [ ] Sign up Pantalytics free tier, add the custom connector in claude.ai
-- [ ] Adan connects and validates with a read
-- [ ] **Verify whether the remote connector has a guarded write flow.** See the safety note below.
-      This gates everything else in Track B.
-- [ ] **Esme connects and runs a real task.** She's the actual test. If a non-technical teammate
-      can't get value here, nothing downstream matters and we stop.
+- [x] Sign up Pantalytics free tier, add the custom connector in claude.ai — done 2026-08-03
+- [x] Adan connects and validates with a read — done 2026-08-03
+- [x] **Verify the remote connector has a guarded write flow — CONFIRMED 2026-08-03.** The Claude
+      app prompted Esme for permission before the write landed. The safety gate exists.
+- [x] **Esme connects and runs a real task — done 2026-08-03.** Under her own login, she read and
+      then wrote (created quote S01460, then cancelled it). Non-technical person, full read+write
+      with an approve step. **Phase 3 validated. Go on the $257.**
 - [ ] Decide which skills to deploy org-wide, and scope the porting work (below)
+
+**Note on Esme's key:** she's capped at short-lived (1-day) Odoo API keys. That's Odoo's built-in
+security (persistent keys are admin-only), not a misconfig, verified against prod: no config
+parameter caps it. Do NOT make her an admin to work around it. The owned module (Phase 4) uses
+OAuth token refresh, so the persistent-key problem disappears there. The 1-day key is fine for the
+test.
 
 **The skills do NOT transfer as-written.** Found 2026-07-16. Every skill is hardcoded to the local
 tuanle96 connector's API: `preview_write` (4), `validate_write` (6), `execute_approved_write` (6),

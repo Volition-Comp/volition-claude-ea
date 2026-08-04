@@ -76,6 +76,8 @@ Supporting material lives in `references/`: SOPs in `references/sops/`, examples
   (Internal Reference = vendor SKU, Route = Buy, Track Inventory on).
 - `references/vendor-rules.md`: Westcan freight + 22% tariff, Prime Design freight + the
   ProMaster City component build, and the cost-in-qty pricing multipliers.
+- `references/van-interior-dimensions.md`: usable interior dimensions for every van we upfit
+  (roof height, widths, wheel wells, floor length, door openings), from the Knapheide catalogs.
 - `references/odoo-known-issues.md`: prod vs staging, the guarded write flow, editing confirmed
   SOs, chatter formatting, the Odoo 19 analytic crash, image upload, TLS on this network.
 - `references/website-build-notes.md`: which product field renders where, how to build a page,
