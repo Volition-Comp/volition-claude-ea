@@ -34,6 +34,14 @@ explicit "go" before creating.
 2. **Match products.** `search_records` on `product.product` by `default_code`
    (the part number) or `name`. Read `list_price` for catalog pricing. Prefer
    looking products up live over assuming IDs.
+   - **When you know the real cost, set it on the line.** If Adan gives a live vendor
+     cost (a Meyer / Westcan / vendor screenshot) that differs from the product's
+     `standard_price`, write that cost to the line's **`purchase_price`** ("Cost")
+     field. That makes the margin on the estimate accurate. **Never update the
+     product's `standard_price` to fix a margin.** Catalog cost changes are a
+     separate decision, so the correction stays on the estimate only.
+   - Say the margin out loud in the preview when you've done this, and flag when the
+     catalog `standard_price` is stale so other quotes off list don't run thin.
 3. **Handle parts not in Odoo.** Use the Misc product `[Misc] Special Order Part
    Non Inv` and put the **cost in the quantity field** with `price_unit` = **1.67**
    (this marks it up for ~40% margin). Same trick for shipping: `[S&H] Shipping`
@@ -160,6 +168,22 @@ Look up live when unsure; these are the common ones:
 - `[Misc] Special Order Part Non Inv` (id 2456) — cost-in-qty x 1.67
 - `[S&H] Shipping` (id 2498) — cost-in-qty x 1.11
 - `Discount` (id 2909) — negative `price_unit`
+- `[INCENT] INCENT` (id 2499, $1) — dealer spiff, amount-in-qty x 1
+
+## Dealer spiff / incentive
+A spiff is **its own `[INCENT]` line**, never a discount. Put the dollar amount in
+the quantity field with `price_unit` = 1, name the line
+`[INCENT] INCENT\nIncentive, Dealer Add-On`, and place it **last, after every
+section**. Qty = the stated percentage of the subtotal of all other lines.
+
+**Do not use the `discount` field to pay a spiff.** A discount (positive or negative)
+is a separate pricing decision from the spiff, and mixing them hides both. Some older
+orders show a negative line discount; that was a markup decision, not a spiff, so
+don't copy it as one. Reference: **S01325** (10% discount plus a separate $835.68
+INCENT line = two independent decisions).
+
+**Standing spiffs:**
+- **Chase Chantala / O'Meara Ford** — 15% of the invoice total on every estimate.
 
 ## Key fields (sale.order)
 - `partner_id` — customer (use the person contact's ID)

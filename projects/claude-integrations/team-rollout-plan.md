@@ -2,6 +2,27 @@
 
 _Drafted 2026-07-16. Revised same day after Adan's call on tracks. Decision doc for Adan._
 _Costs verified against claude.com/pricing and the Odoo Apps Store on 2026-07-16._
+_Amended 2026-08-06 after the engineering-standards session. Three changes, all in "Amendments" below._
+
+## Amendments, 2026-08-06
+
+This plan was written to answer "how does the team use Odoo with Claude." A working session on
+2026-08-06 (the CU Anschutz van, S01441) expanded the goal to "how do we get the engineering
+standards out of Adan's and Tony's heads." That is a different problem, and it breaks three
+assumptions here. **Nothing below this section is wrong for the original scope.** These are
+additions, not corrections.
+
+1. **"Tony is app-only. He doesn't need the repo" no longer holds.** True when the scope was
+   Odoo lookups and quoting. False now. Tony is the single largest source of the knowledge the
+   standards work is meant to capture, and a plan where he cannot write to the repo has a hole
+   in it. See "The third surface" below.
+2. **Claude Code on the web was not considered.** Track A is defined here as Claude Code *in
+   VS Code*, which correctly excluded Tony because of uv, the local clone, and the TLS fight.
+   The web version has none of those requirements. That is a third option this plan never
+   weighed. See "The third surface."
+3. **Nothing carries knowledge back up.** Every path here pushes outward: repo to claude.ai,
+   repo to Odoo. There is no route for something Tony or Esme settles in a session to reach the
+   repo. See "The write-back gap."
 
 ## Recommendation up front
 
@@ -48,6 +69,10 @@ builds) is Track A work. Adan's read is that git and VS Code aren't in her wheel
 she should learn. Budget real time for that. See Phase 2.
 
 **Tony is app-only.** He doesn't need the repo.
+
+> **Superseded 2026-08-06.** True for Odoo work. Not true once the goal includes capturing
+> engineering standards, because Tony is the person whose head we are emptying. Re-decide against
+> "The third surface" below.
 
 **Standard vs Premium is volume, not access.** Every seat includes everything, Claude Code
 included. Constance gets the full VS Code setup on a Standard seat. Premium is roughly 5x the
@@ -167,6 +192,65 @@ Odoo through the remote OAuth connector. No VS Code, no git, no command line.
 
 **The repo stays the source of truth for both.** Skills get written and versioned here, then
 pushed up to claude.ai. We do not maintain two copies of a skill.
+
+## The third surface (added 2026-08-06)
+
+**Claude Code also runs on the web at claude.ai/code, and as a desktop app.** This plan equated
+"the repo" with "VS Code," which is why Tony was excluded. That equation is wrong.
+
+| | Repo | Local files & scripts | Local stdio MCP | Setup burden |
+|---|---|---|---|---|
+| Claude app | No | No | No | None |
+| **Claude Code web** | **Yes**, via GitHub | No | No | **None** |
+| Claude Code local (VS Code, desktop, CLI) | Yes | Yes | Yes | uv, clone, TLS, McAfee |
+
+The repo is at `github.com/Volition-Comp/volition-claude-ea`, so the web version has something to
+connect to. Verified 2026-08-06: remote `origin` configured, `main` tracking, nothing unpushed.
+
+**What this means per person:**
+
+- **Tony and Esme:** Claude Code web gives them skills, CLAUDE.md, `references/`, and the decision
+  log, with no install and no IT fight. It also lets them commit, which closes the write-back gap
+  below without building anything.
+- **Adan and Constance stay local.** Not because of VS Code, but because local is the only surface
+  that reaches vendor PDFs and drawings sitting in Downloads, runs scripts (`references/render-pdf.ps1`
+  exists because the Read tool cannot rasterize a PDF), and hosts a local stdio connector. On
+  2026-08-06 all three of those were needed to read the C-Tech quote and shop drawings.
+- **VS Code specifically is a preference, not a requirement.** The Claude Code desktop app is the
+  same local capability without the code editor. Worth trying if either of them finds VS Code
+  more friction than help.
+
+**Test before committing to this:** have Constance sit with Esme, open claude.ai/code, reach the
+repo, make one trivial commit. Fifteen minutes. Esme first, because she is the cheaper person to
+learn on and Tony's buy-in is the harder one to re-earn.
+
+**Important: this does not solve the skill dialect problem.** Claude Code web cannot run a local
+`.exe` either, so it needs a remote connector and hits the same tool-name mismatch described in
+Phase 3. **The connector is the variable, not the editor.**
+
+## The write-back gap (added 2026-08-06)
+
+Every path in this plan pushes knowledge outward. None brings it back. A decision Tony settles in
+a session, a standard Esme learns at checkout, a failure mode either of them spots, all of it dies
+in a chat window today.
+
+Two ways to close it, and they are not exclusive:
+
+1. **Repo access (preferred).** If Tony and Esme are on Claude Code web they commit like everyone
+   else. Git handles merging, history and authorship, and it catches two people settling the same
+   question two different ways. No new machinery.
+2. **A decisions inbox (fallback).** For anyone genuinely stuck on the app: their Claude writes a
+   dated entry to a shared Google Drive folder saying what was decided, why, what it affects and
+   who decided it. Adan or Constance sweeps it from Claude Code, reconciles against existing
+   standards, commits, archives. Same review by a person, without anyone hand-carrying files.
+
+Adan's original instinct was a report he would upload and push himself. That works, but it makes
+him the mail carrier and it is write-only: it tells him what everyone decided and tells everyone
+else nothing. Option 2 is that idea with the manual relay removed.
+
+**Whichever way this lands, it needs a trigger.** Nobody writes things down from memory. The
+Claude Code side can enforce it with a Stop hook that will not let a session close quietly after
+it changed a standard or settled a decision. Same principle as a quality gate on the shop floor.
 
 ## Phases
 
@@ -332,6 +416,12 @@ the permanent home, and keep it off anything sensitive while we're on it.
 - [ ] Tony and Esme connect to our Odoo, each with their own login
 - [ ] **Port the skills** to the remote connector's toolset (scoped in Phase 3). This is the
       unscoped work item. Don't discover it here.
+      **Updated 2026-08-06:** the backlog is now five skills, not four. `checkout-checklist` was
+      added that day and written against the local connector's tool names like the others, which
+      grew this item without anyone deciding to. **Stop writing skills against local tool names
+      until the porting approach is chosen.** Option 2 (describe intent, let each connector work
+      out the how) is the one that keeps a single copy and should be the default unless there is
+      a reason against it.
 - [ ] Deploy skills org-wide
 - [ ] Create the shared Project, load context files as knowledge
 - [ ] Short live walkthrough with Tony and Esme
@@ -385,7 +475,17 @@ Claude Code with writes enabled.
    work, and her admin key only when she's actually doing admin work. Same person, two keys,
    blast radius stays small by default. This is standard least-privilege, not a trust question.
 
-   This is now the **only** thing blocking Phase 0.
+   This is now the **only** thing blocking Phase 0. **Still open as of 2026-08-06.** Phase 0 was
+   marked complete on 2026-07-29 without this being settled, so it is now gating write work on the
+   largest credential in the company rather than gating a phase.
+
+2. **Does Tony get the repo, via Claude Code web?** New as of 2026-08-06. See "The third surface."
+   Gated on the fifteen-minute test with Esme. If yes, the write-back gap closes for free and the
+   original "Tony is app-only" call gets reversed. If no, build the decisions inbox instead.
+
+3. **Which skill-porting approach.** Phase 3 named two options and never picked one. It is now
+   blocking, because every new skill written before the decision adds to the backlog. Five skills
+   and counting.
 
 ## Standing rules for the rollout
 

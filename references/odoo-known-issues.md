@@ -166,9 +166,33 @@ A **"Quotes & Orders" tab** on the `crm.lead` form listing `order_ids` (stored o
 record body rather than the button row, so it renders at any width and sidesteps both problems at
 once. Read-only, hidden on leads via `invisible="type == 'lead'"`.
 
-Staging view **7579**, created 2026-07-25, confirmed working. **Not yet on prod** as of that date,
-pending Constance's testing. Deploy = recreate the same inherited view against the prod
-`crm.lead.form` id, re-resolved in prod. Reversible by deactivating the one view; touches no data.
+**Live on prod as view 7584**, `crm.lead.form.quotes.orders.tab`, deployed 2026-08-05 and confirmed
+working on the mobile app. Inherits `crm.lead.form` (**id 2389**), mode extension, priority 99.
+Reversible by archiving the one view; touches no data.
+
+It adds a notebook page listing `order_ids` read-only with `name`, `so_name`, `date_order`,
+`amount_untaxed`, `amount_total`, `state`, `invisible="type == 'lead'"`. Odoo 19, so `<list>` not
+`<tree>`. It also injects `<field name="type" invisible="1"/>` before the notebook rather than
+trusting the base form, per the modifier gotcha below.
+
+First built as staging view 7579 on 2026-07-25, held pending Constance's testing, then lost when
+staging was rebuilt in early August 2026. Rebuilt from this spec straight into prod. The rebuild
+cost nothing because the spec was written down, which is the argument for writing it down.
+
+### Verifying a view actually applied (without the UI)
+
+`execute_method` on the model with `get_view` (kwargs `{"view_id": <base id>, "view_type": "form"}`)
+returns the **combined** arch plus a `models` dict of every field Odoo resolved. If your page and
+its fields appear there, the view applied. This is the check that distinguishes "saved cleanly" from
+"actually works", and it's the only server-side proof available over MCP.
+
+### Gotcha: the Odoo mobile app caches view definitions
+
+A view created minutes ago **will not appear** in the mobile app until you fully quit it (swipe it
+away, not just background it) and reopen. Backgrounding is not enough. This reads exactly like a
+broken view and cost us a round of debugging on 2026-08-05 when the view was already correct. Verify
+server-side with `get_view` **first**, then restart the app, and only then start suspecting the view.
+Same applies to a browser: hard refresh.
 
 ## Expected Revenue auto-populates from the quote
 
@@ -187,6 +211,12 @@ Odoo gives you `sale_amount_total` ("Sum of Orders") for free, but it is **not s
 | `ir.actions.server` | 1892 | 1891 | Python code action that writes `expected_revenue` on the linked lead |
 | `ir.ui.view` | 7582 | 7580 | Opportunity form: Expected Revenue read-only once a quote exists |
 | `ir.ui.view` | 7583 | 7581 | Opportunity list: Expected Revenue read-only outright |
+
+**The staging IDs in that table are dead.** Staging was rebuilt in early August 2026, so 7580, 7581,
+and server action 1891 no longer exist and the staging URL / DB changed with it. The **prod** side
+survived untouched because it had already been deployed on 2026-07-28. Re-resolve every staging ID
+against the new instance before trusting it. General lesson: a change that only exists on staging is
+one rebuild away from gone, so write the spec down and deploy or discard rather than parking it.
 
 **The rule (chosen by Adan over "sum everything" and "latest only"):**
 
@@ -357,6 +387,43 @@ The Gmail MCP lists attachments but can't download their bytes. To get a file in
 3. Native base64 `ir.attachment` upload is unreliable (hand-reproducing large base64 has dropped a
    byte and would have produced a corrupt PDF). Only use if the decoded length matches the Drive
    `fileSize` exactly.
+
+## Drive returns OCR for drawings, not the drawing
+
+`read_file_content` on an image or a drawing-heavy PDF returns **extracted text**: dimension
+callouts, titles, labels. It does not tell you what is drawn or where anything sits. Working a
+cabinet elevation or a floor plan from that output will produce confident, wrong conclusions.
+
+Found 2026-08-05 on the CU Boulder C-Tech elevations. The OCR carried every dimension but hid that
+the curbside run loses its first 38" to the sliding door, and that the Douglas Radio Van puts the
+refrigerator curbside aft of the slider rather than streetside. Both change the layout.
+
+**To actually see it:** the Drive MCP can't hand over usable image bytes (base64 into context and
+back out is the corruption trap in the Product images section above), and Drive is **not** synced
+to a local folder on these machines. So:
+
+1. Check `C:\Users\<user>\Downloads` first. A file someone just uploaded to Drive is almost always
+   still sitting there under the same name.
+2. Read the local path. Images render visually from disk.
+3. If it isn't local, ask for it to be dropped in Downloads. Don't guess from OCR.
+
+### PDFs need rendering first
+
+Reading a local PDF fails with "pdftoppm is not installed", and there is no poppler, ImageMagick,
+or real Python on these machines. Windows can do it natively: **`references/render-pdf.ps1`** uses
+the built-in `Windows.Data.Pdf` WinRT API to rasterize each page to PNG, which can then be read.
+
+```powershell
+& "references\render-pdf.ps1" -Pdf "$env:USERPROFILE\Downloads\FILE.pdf" -OutDir "<scratchpad>\out"
+```
+
+Writes `page01.png`, `page02.png`, … at 1700px wide (`-Width` to change). It prints a harmless
+`PdfPage does not contain a method named 'Close'` error per page and exits non-zero; **the pages
+still render**. Check the output directory rather than trusting the exit code.
+
+Worth it: C-Tech project recaps carry a cabinet thumbnail next to every line, and the appliance
+cutouts show as solid black panels. That is how you tell a fridge opening from a door opening, and
+none of it survives text extraction.
 
 ## Invoice PDF stopped showing the Stripe credit-card fee after V19
 
