@@ -297,6 +297,8 @@ per-person and per-machine and does not travel.
       done 2026-07-24 (commit `097f5e3`, secret-scanned clean first)
 - [x] Commit the pending edits to CLAUDE.md, `decisions/log.md`, and the modified skills — done
       (same commit)
+- [x] Make `.mcp.json` portable (2026-07-29): both connectors now use `${USERPROFILE}\.local\bin\odoo-mcp.exe`,
+      which resolves per-user instead of hardcoding Adan's path.
 - [x] Create the private repo in the Volition GitHub org, add remote, **push** — done 2026-07-24.
       Live at github.com/Volition-Comp/volition-claude-ea (private). Branch `main`. Off-machine
       backup achieved; the disk-failure risk is closed.
@@ -329,9 +331,14 @@ per-person and per-machine and does not travel.
 **This is a sit-down, not an emailed setup doc.** Adan's read is that terminal work is new for
 her. Plan on a real session plus follow-ups, and expect this to be the slowest phase per person.
 
-- [x] Install VS Code + Claude Code extension, clone the repo — done 2026-07-29
-- [x] She generates her **own** Odoo API key — done 2026-07-29
-- [x] Verify a read — done. **Connected to both prod and staging 2026-07-29.**
+- [x] Walk through: install `uv`, VS Code, clone the repo (2026-07-29; VS Code and the clone
+      already existed, `uv` + the `odoo-mcp` tool installed via winget, `irm | iex` install script
+      avoided since McAfee killed it)
+- [x] She generates her **own** Odoo API key (2026-07-29) — single key, not the two-key split (see
+      decision log 2026-07-29)
+- [x] Verify a read together (2026-07-29): `search_records` on `sale.order` against `odoo-prod`
+      returned live quotes (S01448, S01435, S01439, S01447, S01446) under her own login.
+      **Connected to both prod and staging 2026-07-29.**
 - [ ] Have her run one full skill end to end on her own before calling it fully done
 
 **Phase 2 essentially complete (2026-07-29).** Constance is on Claude Code, connected to prod and
