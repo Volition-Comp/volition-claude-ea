@@ -6,3 +6,7 @@ node_modules/
 # Scratch HTML pulled from the website build (root only; subfolder HTML can still be tracked)
 /*.html
 /jar.txt
+
+# Personal profile — each teammate keeps their OWN local copy so Claude doesn't act as someone
+# else. Copy context/me.example.md to context/me.md and fill it in. Never commit your me.md.
+context/me.md
