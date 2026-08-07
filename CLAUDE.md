@@ -8,6 +8,17 @@ own; see `context/me.example.md`). Default to the **current user's own** data: t
 their inbox, their tasks. Do not assume you are working for one specific person, and never surface
 someone else's to-dos or agenda unless you're explicitly asked to.
 
+**Never hardcode a person into shared config.** No user ids, no logins, no "Adan's inbox" in
+anything committed to this repo. Resolve who you're acting as at runtime:
+- **Odoo:** call `get_odoo_profile` and read `user_context.uid`. That uid is the default owner
+  for activity pulls, quote salespeople, and anything else scoped to "me". If it doesn't match
+  the person you're talking to, say so and stop. The connector is misconfigured, and writes
+  would land under the wrong name.
+- **Gmail / Calendar / Drive:** these are per-account connectors, so they already resolve to the
+  current user. Nothing to do.
+- **Personal identity** lives in `context/me.md`, which is local and gitignored. Anything you'd
+  put in a skill that starts with a specific person's name probably belongs there instead.
+
 ## Top Priority
 Everything you do should support the #1 priority: **delivering sales to the company.**
 

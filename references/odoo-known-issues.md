@@ -5,6 +5,35 @@ looks new. Most of these cost hours to find the first time.
 
 _Harvested from assistant memory 2026-07-16._
 
+## Who am I connected as? (set this up before anything else)
+
+`.mcp.json` is committed and shared, so it must not name a person. Both Odoo entries read the
+login from **your own** environment:
+
+```
+ODOO_LOGIN         your Odoo email, used by both instances
+ODOO_API_KEY       your STAGING key
+ODOO_PROD_API_KEY  your PRODUCTION key
+```
+
+On Windows, one time each, then fully restart VS Code (new env vars don't reach a running
+process):
+
+```
+setx ODOO_LOGIN "you@volitioncomponents.com"
+setx ODOO_PROD_API_KEY "<your prod key>"
+setx ODOO_API_KEY "<your staging key>"
+```
+
+**API keys are per-user and per-database.** A key only works with the login that generated it, so
+a mismatched `ODOO_LOGIN` fails auth outright, and (worse) a shared key silently attributes every
+chatter note, activity, and quote to the wrong person.
+
+Confirm before doing real work: `get_odoo_profile` returns `user_context.uid`. That's who you are.
+Current prod uids: Adan 6, Tony 7, Constance 2, Esme 22. **Skills must resolve this uid at runtime
+and never hardcode it.** Hardcoding uid 6 in the audit-activities skill is what showed Adan's
+overdue to-do list to Constance on her own machine (fixed 2026-08-07).
+
 ## Which instance am I in?
 
 Two Odoo MCP connections exist:

@@ -6,7 +6,7 @@
       "env": {
         "ODOO_URL": "https://volition-staging-03-july-34408301.dev.odoo.com",
         "ODOO_DB": "volition-staging-03-july-34408301",
-        "ODOO_USERNAME": "agonzales@volitioncomponents.com",
+        "ODOO_USERNAME": "${ODOO_LOGIN}",
         "ODOO_PASSWORD": "${ODOO_API_KEY}",
         "ODOO_API_KEY": "${ODOO_API_KEY}",
         "ODOO_TRANSPORT": "json2",
@@ -21,7 +21,7 @@
       "env": {
         "ODOO_URL": "https://www.volitioncomponents.com",
         "ODOO_DB": "shahid-malik-volition-production-12281539",
-        "ODOO_USERNAME": "agonzales@volitioncomponents.com",
+        "ODOO_USERNAME": "${ODOO_LOGIN}",
         "ODOO_PASSWORD": "${ODOO_PROD_API_KEY}",
         "ODOO_API_KEY": "${ODOO_PROD_API_KEY}",
         "ODOO_TRANSPORT": "json2",
@@ -31,8 +31,8 @@
       }
     },
     "google-marketing": {
-      "command": "C:\\Users\\agonz\\.config\\google-marketing\\.venv\\Scripts\\python.exe",
-      "args": ["C:\\Users\\agonz\\.config\\google-marketing\\server.py"],
+      "command": "${USERPROFILE}\\.config\\google-marketing\\.venv\\Scripts\\python.exe",
+      "args": ["${USERPROFILE}\\.config\\google-marketing\\server.py"],
       "env": {
         "GOOGLE_ADS_ENABLE_WRITES": "1"
       }

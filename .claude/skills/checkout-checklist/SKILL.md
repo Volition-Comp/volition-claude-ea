@@ -2,7 +2,7 @@
 
 Generate a build-specific vehicle checkout inspection sheet from an Odoo sales order.
 Use when Esme (or whoever runs checkout) needs a checklist for a finished build, or when
-Adan says "make a checkout sheet for S0xxxx".
+the user says "make a checkout sheet for S0xxxx".
 
 ## Why this exists
 

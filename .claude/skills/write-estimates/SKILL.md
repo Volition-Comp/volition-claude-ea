@@ -1,13 +1,18 @@
 ---
 name: write-estimates
-description: Draft a sales quote (estimate) in Odoo for Volition Components, in Adan's standard format. Use when Adan says "draft an estimate / quote for [customer]" with a list of parts or a build scope.
+description: Draft a sales quote (estimate) in Odoo for Volition Components, in our standard house format. Use when the user says "draft an estimate / quote for [customer]" with a list of parts or a build scope.
 ---
 
 # Write Estimates (Odoo)
 
-Draft a `sale.order` in Odoo that mirrors Adan's format and pricing conventions.
-Estimates are van-upfit quotes (shelving, ladder racks, partitions, flooring,
+Draft a `sale.order` in Odoo that mirrors the **house format** and pricing conventions
+(the standard Adan set, and what every Volition quote should look like regardless of who
+writes it). Estimates are van-upfit quotes (shelving, ladder racks, partitions, flooring,
 refrigeration, lighting, specialized builds).
+
+The quote belongs to whoever is drafting it. Resolve the connected Odoo user with
+`get_odoo_profile` (`user_context.uid`) and default the salesperson to them, not to a
+hardcoded id. See [[audit-activities]] for the full rule.
 
 ## Connection
 Use the **`odoo-prod`** MCP tools. That is the live system of record. The plain
@@ -16,7 +21,7 @@ creating there is useless. Re-resolve product/partner IDs in `odoo-prod` (IDs ca
 differ between instances). Writes go through the guarded flow:
 `preview_write` -> `validate_write` -> `execute_approved_write` (confirm=true).
 Note: `validate_write` must run in the same session before `execute_approved_write`,
-or the approval token is rejected. Always show Adan a readable preview and get an
+or the approval token is rejected. Always show the user a readable preview and get an
 explicit "go" before creating.
 
 ## Inputs to gather (ask only for what's missing)
@@ -27,14 +32,14 @@ explicit "go" before creating.
 - **Pricing**: default is Odoo catalog pricing (the product `list_price`)
 
 ## Process
-1. **Resolve the customer.** `search_records` on `res.partner` by name. Adan's
+1. **Resolve the customer.** `search_records` on `res.partner` by name. Our
    quotes attach to a **person contact** (a child of the company), e.g.
    "Phil Long Ford Denver, Troy D Hines". Confirm the contact exists; if only the
    company exists, ask before creating a new contact.
 2. **Match products.** `search_records` on `product.product` by `default_code`
    (the part number) or `name`. Read `list_price` for catalog pricing. Prefer
    looking products up live over assuming IDs.
-   - **When you know the real cost, set it on the line.** If Adan gives a live vendor
+   - **When you know the real cost, set it on the line.** If the user gives a live vendor
      cost (a Meyer / Westcan / vendor screenshot) that differs from the product's
      `standard_price`, write that cost to the line's **`purchase_price`** ("Cost")
      field. That makes the margin on the estimate accurate. **Never update the
@@ -53,7 +58,7 @@ explicit "go" before creating.
      `[ORI121217050] DC-DC Charger, Victron Orion XS, 12/12-50A, 600W, Bluetooth`).
      Research the vendor page when needed to get the real model number. Don't leave
      the default "[Misc] Special Order Part Non Inv" as the visible name.
-4. **Build the lines in Adan's format**, as an `order_line` list of Odoo command
+4. **Build the lines in the house format**, as an `order_line` list of Odoo command
    tuples `[0, 0, {...}]`, grouped by package. **Order within each section is strict:**
    - **Section header**: `{"display_type": "line_section", "name": "UPPERCASE PACKAGE NAME"}`
    - **Includes note**: `{"display_type": "line_note", "name": "Includes:\n- ...\n- ..."}`.
@@ -95,7 +100,7 @@ explicit "go" before creating.
 5. **Set the project name**: top-level `so_name` = the project name.
 6. **Run the fitment check** (see below). Do this before the preview, every time the quote
    has shelving or mounted accessories and a known vehicle.
-7. **Preview to Adan** (human-readable table + total). Flag: no freight line unless a
+7. **Preview to the user** (human-readable table + total). Flag: no freight line unless a
    cost is given; tax is $0 on API-created drafts (verify fiscal position, dealers are
    usually resale-exempt). Include the fitment check result.
 8. On "go": `validate_write` then `execute_approved_write` (confirm=true).
@@ -144,8 +149,8 @@ consumed against the run available, e.g. "Street side: 96" + 60" = 156" in 156 7
 clears. Curb side: 60" shelf lands in the 37 5/16" pre-wheel well zone, does not fit."
 
 **If something doesn't fit, say so before the quote goes out, not after.** Offer the fix
-(shorter unit, move to the other side, relocate ahead of the wheel well) and let Adan decide.
-Do not silently resize or drop a line he asked for.
+(shorter unit, move to the other side, relocate ahead of the wheel well) and let the user
+decide. Do not silently resize or drop a line they asked for.
 
 ## Posting product links (chatter)
 `chatter_post` escapes HTML (links show as literal text) and `message_post` via
@@ -192,7 +197,7 @@ INCENT line = two independent decisions).
 - `order_line` — one2many, build with `[0, 0, {...}]` command tuples
 
 ## Vehicle fields (sale.order, all selection dropdowns)
-Set these when Adan gives the vehicle. They are selection fields, so use the exact
+Set these when the user gives the vehicle. They are selection fields, so use the exact
 option string (pull options via `get_model_fields` if unsure):
 - `x_studio_year` — "Year" (e.g. "2026", options 2015-2027)
 - `x_studio_make` — "Make" (Ford, Mercedes-Benz, Ram, Chevrolet, GMC, Other)
@@ -209,8 +214,10 @@ option string (pull options via `get_model_fields` if unsure):
 Every SO needs a matching `crm.lead` opportunity, linked both ways.
 - **Create** `crm.lead`: `name` = project name (= `so_name`), `type` = "opportunity",
   `partner_id` = same contact as the SO, `expected_revenue` = SO total, `user_id` =
-  salesperson (Adan = 6, Tony = 7), `team_id` = Sales (1), `stage_id` = **Proposition (3)**
-  for a freshly written quote, plus `contact_name` / `email_from`.
+  salesperson (**default to the current user's uid** from `get_odoo_profile`; only set
+  someone else when asked. Adan = 6, Tony = 7, Constance = 2), `team_id` = Sales (1),
+  `stage_id` = **Proposition (3)** for a freshly written quote, plus `contact_name` /
+  `email_from`.
 - **Link the SO**: set `opportunity_id` = the new lead, and `origin` ("Source Document",
   on the Other Info tab) = the project name. Both appear on the SO's Other Info tab.
 - Stages: New(1), Qualified(2), Proposition(3), Approved – Final Prep(10), Won(4),
@@ -222,7 +229,7 @@ Section headers and notes must reflect the **actual material**. Don't default to
 "aluminum." Known: **Knapheide = steel modular shelving**; **Westcan = aluminum**.
 
 ## Format references
-Good examples of Adan's shelving/upfit structure: **S00918, S01132, S01066**.
+Good examples of the house shelving/upfit structure: **S00918, S01132, S01066**.
 A larger specialized build for section/note style: **S01285**.
 **BOM-expanded package note** with grouped parts + technician install description:
 **S01039** (shelving + accessories), and **S01316** (Sprinter Plumber's Pkg, cleaned up).
@@ -230,6 +237,6 @@ First skill-built estimate: **S01289** (Fire Sale Transit, Phil Long / Troy D Hi
 
 ## Notes & caveats
 - Catalog pricing comes from `list_price`. A customer pricelist may discount it; if
-  Adan wants pricelist pricing, flag it (API-set `price_unit` overrides the pricelist).
+  the user wants pricelist pricing, flag it (API-set `price_unit` overrides the pricelist).
 - Taxes do not auto-apply on API create. Confirm the fiscal position on the draft.
 - Keep tone/format consistent with [[comm-style-no-em-dashes]] (no em dashes).
