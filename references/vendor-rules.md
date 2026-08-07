@@ -114,6 +114,20 @@ Labor: **LABLRDD** Ladder Rack Installation, Double Drop Down (id 3950, $595).
 Catalog list prices already include the standard 1.67x markup on Prime Design dealer cost, so
 don't mark them up again.
 
+## Espar heaters: B2 on a Transit, not D2
+
+**Ford stopped building a diesel Transit years ago**, so a Transit coming through the shop is
+gas (or an E-Transit). The Espar heater on a Transit is therefore almost always the **gasoline
+B2/B2L**, not the diesel D2.
+
+Product: `Gas Heater Package w/Install, Espar, B2L 2KW, Ford Transit Gas/ProMaster/Sprinter`
+(prod id 2689). Includes install labor. Fuel pickup plumbs to the vehicle's gasoline tank.
+
+Notes and specs from customers, sales, or the shop often say "D2" out of habit, since that was
+the default for years. **Read it as the model family, not the fuel.** Confirm the fuel on the
+actual van before ordering, but default to B2 on a Transit. Sprinter and ProMaster still come
+both ways, so check those.
+
 ## Where the freight line goes
 
 Freight is charged as its own `[S&H] Shipping` line inside a **pricing section**, never as a

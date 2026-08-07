@@ -100,6 +100,29 @@ Note: `line_note` text can drop content on create (observed the final line of a 
 silently truncated on first write, stored fully on a follow-up write). Read the note back after
 writing to confirm it stored whole.
 
+## You and the person you're working with are the same Odoo user
+
+The assistant connects with that teammate's own API key, so **every write it makes carries their
+`write_uid`**. If they're editing the same record in the Odoo UI while the assistant works over
+MCP, `write_uid` and `write_date` cannot tell the two apart.
+
+**Found 2026-08-07 on S01469 (draft).** The assistant edited four lines, then noticed the order
+total had moved the wrong way: down $68.65, despite $57.78 of material being added. Line 19695
+(the Xantrex inverter, untouched by any of those writes) had picked up `discount` = 15.
+
+The assistant concluded its own writes had triggered a pricelist recompute, "restored" the
+discount to 0, and wrote that up here as an Odoo bug. **All of it was wrong.** Adan had typed
+that 15% in by hand, in the UI, while the edits were happening. The revert wiped real pricing off
+a live customer quote.
+
+Lessons:
+
+- **An unexplained delta on a record is not automatically your own side effect.** The other person
+  is in there too. Ask before reverting anything that looks like it appeared on its own.
+- **Reverting is a write like any other.** "Putting it back the way it was" deserves the same
+  confirmation as any other change to customer pricing, not less.
+- Checking `amount_total` after editing lines is still worth doing. Just don't assume the cause.
+
 ## Chatter notes render as escaped HTML
 
 **`chatter_post` HTML-escapes the body and wraps everything in one `<p>`.** Any tags or entities
